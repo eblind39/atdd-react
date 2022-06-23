@@ -65,6 +65,7 @@ before(() => {
     // deleteBooks();
 });
 
+/* Visiting the app before each test. */
 beforeEach(() => {
     // createBooks();
     cy.visit('http://localhost:3000/');

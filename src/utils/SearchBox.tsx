@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useMemo } from 'react';
 import { TextField } from '@mui/material';
 // import _ from 'lodash';
 
+/* Defining the props that the component will receive. */
 interface Props {
     term: string;
     onSearch: (evt: SyntheticEvent) => void
