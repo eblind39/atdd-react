@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Person from '../types/Person';
 import { getElegibleTypeDescr } from '../utils/index';
 import ElegibleType from "../types/ElegibleType";
-import NavBar from "../components/NavBar";
+import NavBar from "./NavBar";
 import styled from "@emotion/styled";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

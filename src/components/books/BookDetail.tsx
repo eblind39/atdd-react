@@ -1,11 +1,11 @@
 import React from 'react';
-import { Book } from '../types/books';
 import { Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Loading from '../utils/Loading';
-import Error from '../utils/Error';
+import { Book } from '../../types/books';
+import Loading from '../../utils/Loading';
+import Error from '../../utils/Error';
 
 interface Props {
     book: Book;

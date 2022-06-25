@@ -6,9 +6,10 @@ import {
     MenuItem, 
     Typography 
 } from '@mui/material';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import HomeIcon from '@mui/icons-material/Home';
+import SourceIcon from '@mui/icons-material/Source';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import GroupIcon from '@mui/icons-material/Group';
 import { Link } from "react-router-dom";
 
 const NavBar: React.FC = (): JSX.Element => {
@@ -17,7 +18,15 @@ const NavBar: React.FC = (): JSX.Element => {
         <MenuList>
             <MenuItem>
                 <ListItemIcon>
-                    <SendIcon fontSize="small" />
+                    <MenuBookIcon fontSize="small" />
+                </ListItemIcon>
+                <Link to="/books">
+                    <Typography variant="inherit">Books</Typography>
+                </Link>
+            </MenuItem>
+            <MenuItem>
+                <ListItemIcon>
+                    <HomeIcon fontSize="small" />
                 </ListItemIcon>
                 <Link to="/">
                     <Typography variant="inherit">Home</Typography>
@@ -25,7 +34,7 @@ const NavBar: React.FC = (): JSX.Element => {
             </MenuItem>
             <MenuItem>
                 <ListItemIcon>
-                    <PriorityHighIcon fontSize="small" />
+                    <SourceIcon fontSize="small" />
                 </ListItemIcon>
                 <Link to="/tsbasics">
                     <Typography variant="inherit">TS Basics</Typography>
@@ -33,7 +42,7 @@ const NavBar: React.FC = (): JSX.Element => {
             </MenuItem>
             <MenuItem>
                 <ListItemIcon>
-                    <DraftsIcon fontSize="small" />
+                    <GroupIcon fontSize="small" />
                 </ListItemIcon>
                 <Link to="/users">
                     <Typography variant="inherit">Users</Typography>

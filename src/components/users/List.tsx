@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from '../../types/Users/users';
+import { User } from '../../types/users';
 
 interface Users {
     // children: JSX.Element[];

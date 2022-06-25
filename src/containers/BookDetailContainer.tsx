@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import useRemoteService from '../hooks/useRemoteService';
-import BookDetail from './BookDetail';
+import BookDetail from '../components/books/BookDetail';
 
 const BookDetailContainer = () => {
     let params = useParams();

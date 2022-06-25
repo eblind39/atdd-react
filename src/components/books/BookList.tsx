@@ -5,9 +5,9 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import { Book } from '../types/books';
-import Loading from '../utils/Loading';
-import Error from '../utils/Error';
+import { Book } from '../../types/books';
+import Loading from '../../utils/Loading';
+import Error from '../../utils/Error';
 
 interface Props {
     books: Book[];

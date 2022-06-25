@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useReducer } from 'react';
-import { User } from '../../types/Users/users';
+import { User } from '../../types/users';
 // import { actionTypes } from '../../types/Users/users';
 
 enum actionTypes {

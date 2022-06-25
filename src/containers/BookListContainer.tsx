@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-import BookList from './BookList';
+import NavBar from './NavBar';
+import BookList from '../components/books/BookList';
 import useRemoteService from '../hooks/useRemoteService';
 // import { TextField } from '@mui/material';
 import SearchBox from '../utils/SearchBox';
@@ -19,6 +20,7 @@ const BookListContainer = () => {
 
     return (
         <React.Fragment>
+            <NavBar />
             <SearchBox term={term} onSearch={onSearch} />
             <BookList books={data} loading={loading} error={error} />
         </React.Fragment>

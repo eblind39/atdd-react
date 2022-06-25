@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import NavBar from "./NavBar";
 import List from "../components/users/List";
-import { UsersState } from "../types/Users/users";
 import Form from "../components/users/Form";
-import { User } from "../types/Users/users";
+import { User } from "../types/users";
+import { UsersState } from "../types/users";
 
 const Users: React.FC = (): JSX.Element => {
     const [users, setUsers] = useState<UsersState["users"]>([]);
@@ -22,6 +23,7 @@ const Users: React.FC = (): JSX.Element => {
 
     return (
         <React.Fragment>
+            <NavBar />
             <div ref={divRef} className="containerUsers">
                 <List users={users} />
                 <Form onNewUser={handleNewUser} />
