@@ -13,9 +13,12 @@
       "jest",
       "lodash",
       "react",
+      "enzyme",
       "react-dom",
       "react-redux",
-      "react-router-dom"
+      "react-router-dom",
+      "react-test-renderer",
+      "redux-mock-store"
     ],
     "lib": [
       "dom",
@@ -39,6 +42,7 @@
   "include": [
     "src",
     "../node_modules/cypress",
-    "cypress/*/*.ts"
+    "cypress/*/*.ts",
+    "node_modules/jest-dom"
   ]
 }

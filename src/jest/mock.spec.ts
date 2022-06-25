@@ -16,7 +16,7 @@ describe('jest mock', () => {
     });
 });
 
-const fetchUser = (id, process) => {
+const fetchUser = (id: number) => {
     return fetch(`http://localhost:4000/users/${id}`);
 }
 
