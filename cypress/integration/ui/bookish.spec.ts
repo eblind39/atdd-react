@@ -68,7 +68,7 @@ before(() => {
 /* Visiting the app before each test. */
 beforeEach(() => {
     // createBooks();
-    cy.visit('http://localhost:3000/');
+    cy.visit('http://localhost:3000/books');
 });
 
 afterEach(() => {

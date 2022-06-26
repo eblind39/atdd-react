@@ -5,12 +5,6 @@ interface Props {
     initialData: any;
 }
 
-// type FetchedData = {
-//     type: Book[];
-// } | {
-//     type: Book;
-// }
-
 const useRemoteService = ({ initialUrl, initialData }: Props) => {
     const [data, setData] = useState<any>(initialData);
     const [url, setUrl] = useState<string>(initialUrl);

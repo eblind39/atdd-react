@@ -2,17 +2,14 @@ import React, { useState, useEffect } from "react";
 
 const foodList: string[] = ['Hamburger', 'Pizza', 'Tacos'];
 
-const fakeApiCall = () => new Promise<string[]>((resolve) => 
-        setTimeout(
-            () => {
-                const foodnames: string[] = foodList;
-                resolve(foodnames)
-            }, 2000
-        )
-    );
-
 const AsyncList = (): JSX.Element => {
     const [foodData, setFoodData] = useState<string[]>([]);
+
+    const fakeApiCall = () => new Promise<string[]>((resolve) => 
+        setTimeout(() => {
+                    const foodnames: string[] = foodList;
+                    resolve(foodnames)
+                }, 2000));
 
     useEffect(() => {
         fakeApiCall()
