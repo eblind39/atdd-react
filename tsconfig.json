@@ -18,7 +18,8 @@
       "react-redux",
       "react-router-dom",
       "react-test-renderer",
-      "redux-mock-store"
+      "redux-mock-store",
+      "redux-logger"
     ],
     "lib": [
       "dom",

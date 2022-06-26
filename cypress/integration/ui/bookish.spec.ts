@@ -1,5 +1,6 @@
 import { Book } from '../../../src/types/books';
 import axios from 'axios';
+import _ from 'lodash';
 /// <reference types="cypress" />
 
 const deleteBooks = () => {
@@ -61,6 +62,24 @@ const createBooks = () => {
     );
 }
 
+const gotoApp = () => {
+    cy.visit('http://localhost:3000/books');
+}
+
+const checkAppTitle = () => {
+    cy.get('h2[data-test="heading"]').contains('Bookish');
+}
+
+const checkBookListWith = (expectation: string[]) => {
+    cy.get('div[data-test="book-list"]').should('exist');
+    // cy.get('div.book-item').should('have.length', 2);
+    cy.get('div.book-title').should((books) => {
+        expect(books).to.have.length(3);
+        const titles = [...books].map(x => x.innerHTML);
+        expect(titles).to.deep.equal(expectation);
+    });
+}
+
 before(() => {
     // deleteBooks();
 });
@@ -68,7 +87,7 @@ before(() => {
 /* Visiting the app before each test. */
 beforeEach(() => {
     // createBooks();
-    cy.visit('http://localhost:3000/books');
+    gotoApp();
 });
 
 afterEach(() => {
@@ -77,16 +96,10 @@ afterEach(() => {
 
 describe('Bookish App', () => {
     it('Visits the bookish', () => {
-        cy.get('h2[data-test="heading"]').contains('Bookish');
+        checkAppTitle();
     });
     it('Shows a book list', () => {
-        cy.get('div[data-test="book-list"]').should('exist');
-        // cy.get('div.book-item').should('have.length', 2);
-        cy.get('div.book-title').should((books) => {
-            expect(books).to.have.length(3);
-            const titles = [...books].map(x => x.innerHTML);
-            expect(titles).to.deep.equal(['Refactoring', 'Domain-driven design', 'Javascript - The Good Parts']);
-        });
+        checkBookListWith(['Refactoring', 'Domain-driven design', 'Javascript - The Good Parts']);
     });
     it('Goes to the detail page', () => {
         cy.get('div.book-item').contains('View Details').eq(0).click();
