@@ -4,10 +4,11 @@ import BookList from '../components/books/BookList';
 import useRemoteService from '../hooks/useRemoteService';
 // import { TextField } from '@mui/material';
 import SearchBox from '../utils/SearchBox';
+import { API_URL } from '../app/config';
 
 const BookListContainer = () => {
     const [term, setTerm] = useState<string>('');
-    const { data, loading, error, setUrl } = useRemoteService({ initialUrl: 'http://localhost:3007/books', initialData: [] });
+    const { data, loading, error, setUrl } = useRemoteService({ initialUrl: `${API_URL}/books`, initialData: [] });
     const onSearch = (evt: SyntheticEvent) => {
         let target = evt.target as HTMLInputElement;
         let { value } = target;
@@ -15,7 +16,7 @@ const BookListContainer = () => {
     }
 
     useEffect(() => {
-        setUrl(`http://localhost:3007/books?q=${term}`);
+        setUrl(`${API_URL}/books?q=${term}`);
     }, [term, setUrl]);
 
     return (

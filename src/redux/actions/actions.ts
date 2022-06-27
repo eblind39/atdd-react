@@ -1,5 +1,6 @@
 import * as ActionTypes from './actionTypes';
 import axios from 'axios';
+import { API_URL } from '../../app/config';
 
 const setSearchTerm = (term: string) => {
     return {
@@ -12,7 +13,7 @@ const fetchBooks = () => {
     return (dispatch: any, getState: any) => {
         const state = getState();
         dispatch({ type: ActionTypes.FETCH_BOOKS_PENDING });
-        return axios.get(`http://localhost:3007/books?q=${state.term || ''}`)
+        return axios.get(`${API_URL}/books?q=${state.term || ''}`)
             .then((res) => {dispatch({ type: ActionTypes.FETCH_BOOKS_SUCCESS, books: res.data })
             .catch((err: any) => dispatch({ type: ActionTypes.FETCH_BOOKS_FAILED, err: err.message }))
         });
