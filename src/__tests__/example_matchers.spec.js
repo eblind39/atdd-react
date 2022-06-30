@@ -1,4 +1,28 @@
+const getRole = (key) => {
+    let rolesList = [
+        {
+            code: 5,
+            key: 'driver_last_mile'
+        }
+    ];
+    const role = rolesList.find((e) => e.key===key)
+    if (!role) {
+        return {
+            code: '999',
+            key: 'UNKNOWN_ROLE'
+        };
+    }
+    return role;
+}
+
 describe('matchers', () => {
+    it('getRole', () => {
+        // const role = getRole(3);
+        expect(getRole('driver_last_mile')).toEqual(        {
+            code: 5,
+            key: 'driver_last_mile'
+        });
+    });
     it('toBe', () => {  // ===
         expect(true).toBe(true);
     });
