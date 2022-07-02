@@ -1,31 +1,40 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
-import NavBar from './NavBar';
-import BookList from '../components/books/BookList';
-import useRemoteService from '../hooks/useRemoteService';
-// import { TextField } from '@mui/material';
-import SearchBox from '../utils/SearchBox';
-import { API_URL } from '../app/config';
+import React, {SyntheticEvent, useEffect, useState} from 'react'
+import {useDispatch} from 'react-redux'
+import {AppDispatch} from '../app/store'
+import {useAppSelector} from '../app/hooks'
+import {
+    getBooks,
+    selectBooks,
+    selectLoading,
+    selectError,
+} from '../features/book/bookSlice'
+import SearchBox from '../utils/SearchBox'
+import NavBar from './NavBar'
+import BookList from '../components/books/BookList'
 
 const BookListContainer = () => {
-    const [term, setTerm] = useState<string>('');
-    const { data, loading, error, setUrl } = useRemoteService({ initialUrl: `${API_URL}/books`, initialData: [] });
+    const [term, setTerm] = useState<string>('')
+    const dispatch: AppDispatch = useDispatch()
+    const books = useAppSelector(selectBooks)
+    const loading = useAppSelector(selectLoading)
+    const error = useAppSelector(selectError)
     const onSearch = (evt: SyntheticEvent) => {
-        let target = evt.target as HTMLInputElement;
-        let { value } = target;
-        setTerm(value);
+        const target = evt.target as HTMLInputElement
+        const {value} = target
+        setTerm(value)
     }
 
     useEffect(() => {
-        setUrl(`${API_URL}/books?q=${term}`);
-    }, [term, setUrl]);
+        dispatch(getBooks(term))
+    }, [term])
 
     return (
-        <React.Fragment>
+        <>
             <NavBar />
             <SearchBox term={term} onSearch={onSearch} />
-            <BookList books={data} loading={loading} error={error} />
-        </React.Fragment>
+            <BookList books={books} loading={loading} error={error} />
+        </>
     )
 }
 
-export default BookListContainer;
+export default BookListContainer
