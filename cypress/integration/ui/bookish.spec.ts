@@ -1,6 +1,6 @@
-import {Book} from '../../../src/types/books'
 import axios from 'axios'
 import _ from 'lodash'
+import {Book} from '../../../src/types/books'
 /// <reference types="cypress" />
 
 const deleteBooks = () => {

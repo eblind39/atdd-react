@@ -8,7 +8,7 @@ import Users from './containers/Users'
 import Form from './containers/products/Form'
 import NotFoundPage from './utils/NotFoundPage'
 
-function App() {
+const App = () => {
     return (
         <Routes>
             <Route path="/books" element={<BookListContainer />} />

@@ -22,10 +22,7 @@ const BookList = ({books, loading, error}: Props) => {
                 Bookish
             </Typography>
             <Loading showIf={loading === 'pending'} />
-            <Error
-                showIf={typeof error !== undefined}
-                message={'An error has occurred'}
-            />
+            <Error showIf={error !== ''} message={'An error has occurred '} />
             <Grid container spacing={3}>
                 {books && books.length > 0
                     ? books.map(book => (
