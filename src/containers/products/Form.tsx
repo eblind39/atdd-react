@@ -1,18 +1,88 @@
-import React from 'react'
+import React, {SyntheticEvent, useState} from 'react'
 import {TextField, Typography} from '@mui/material'
 import InputLabel from '@mui/material/InputLabel'
 import Select, {SelectChangeEvent} from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import Button from '@mui/material/Button'
+import NavBar from '../NavBar'
+
+interface ErrorMssgs {
+    name: string
+    size: string
+    type: string
+}
+
+interface EvtProps {
+    name: string
+    value: string | number
+}
 
 const Form = () => {
+    const [name, setName] = useState<string>('')
+    const [size, setSize] = useState<string>('')
+    const [type, setType] = useState<number>(0)
+    const [formErrors, setFormErrors] = useState<ErrorMssgs>({
+        name: '',
+        size: '',
+        type: '',
+    })
+
+    const handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault()
+        if (!name)
+            setFormErrors(prevState => ({
+                ...prevState,
+                name: 'The name is required',
+            }))
+        if (!size)
+            setFormErrors(prevState => ({
+                ...prevState,
+                size: 'The size is required',
+            }))
+        if (!type)
+            setFormErrors(prevState => ({
+                ...prevState,
+                type: 'The type is required',
+            }))
+    }
+
+    const handleOnChange = (e: SyntheticEvent | SelectChangeEvent) => {
+        const elem = e.target as HTMLInputElement | HTMLSelectElement
+        const {name, value}: EvtProps = elem
+        switch (name) {
+            case 'name':
+                setName(value)
+                break
+            case 'size':
+                setSize(value)
+                break
+            case 'type':
+                setType(Number(value))
+                break
+        }
+    }
+
     return (
         <React.Fragment>
+            <NavBar />
             <Typography variant="h1" component="h1" data-test="heading">
                 Create Product
             </Typography>
-            <form>
-                <TextField label="name" id="name" />
-                <TextField label="size" id="size" />
+            <form onSubmit={handleSubmit}>
+                <TextField
+                    label="name"
+                    id="name"
+                    name="name"
+                    helperText={formErrors.name}
+                    onChange={handleOnChange}
+                />
+                <TextField
+                    label="size"
+                    id="size"
+                    name="size"
+                    onChange={handleOnChange}
+                    helperText={formErrors.size}
+                />
                 <InputLabel htmlFor="type" id="type-label">
                     Type
                 </InputLabel>
@@ -24,6 +94,7 @@ const Form = () => {
                     label="type"
                     native={false}
                     open={true}
+                    onChange={handleOnChange}
                 >
                     <MenuItem value="">
                         <em>None</em>
@@ -32,6 +103,14 @@ const Form = () => {
                     <MenuItem value={2}>Furniture</MenuItem>
                     <MenuItem value={3}>Clothing</MenuItem>
                 </Select>
+                {formErrors.type.length > 0 ? <p>{formErrors.type}</p> : null}
+                <Button
+                    type="submit"
+                    variant="contained"
+                    style={{top: '400px'}}
+                >
+                    Submit
+                </Button>
             </form>
         </React.Fragment>
     )

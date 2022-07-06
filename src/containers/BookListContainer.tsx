@@ -29,11 +29,11 @@ const BookListContainer = () => {
     }, [term])
 
     return (
-        <>
+        <React.Fragment>
             <NavBar />
             <SearchBox term={term} onSearch={onSearch} />
             <BookList books={books} loading={loading} error={error} />
-        </>
+        </React.Fragment>
     )
 }
 
