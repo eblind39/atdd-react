@@ -5,6 +5,7 @@ import Select, {SelectChangeEvent} from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import NavBar from '../NavBar'
+import {API_URL} from '../../app/config'
 
 interface ErrorMssgs {
     name: string
@@ -21,14 +22,18 @@ const Form = () => {
     const [name, setName] = useState<string>('')
     const [size, setSize] = useState<string>('')
     const [type, setType] = useState<number>(0)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [formErrors, setFormErrors] = useState<ErrorMssgs>({
         name: '',
         size: '',
         type: '',
     })
 
-    const handleSubmit = (e: SyntheticEvent) => {
+    const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
+
+        setIsSaving(true)
+
         if (!name)
             setFormErrors(prevState => ({
                 ...prevState,
@@ -44,6 +49,18 @@ const Form = () => {
                 ...prevState,
                 type: 'The type is required',
             }))
+
+        await fetch(`${API_URL}/products`, {
+            method: 'POST',
+            body: JSON.stringify({
+                id: 3,
+                name: 'Socks',
+                size: 'M',
+                type: 3,
+            }),
+        })
+
+        setIsSaving(false)
     }
 
     const handleOnChange = (e: SyntheticEvent | SelectChangeEvent) => {
@@ -62,6 +79,16 @@ const Form = () => {
         }
     }
 
+    const handleBlur = (e: SyntheticEvent | SelectChangeEvent) => {
+        const elem = e.target as HTMLInputElement | HTMLSelectElement
+        const {name, value}: EvtProps = elem
+
+        setFormErrors(prevState => ({
+            ...prevState,
+            [name]: value.length ? '' : `The ${name} is required`,
+        }))
+    }
+
     return (
         <React.Fragment>
             <NavBar />
@@ -75,12 +102,14 @@ const Form = () => {
                     name="name"
                     helperText={formErrors.name}
                     onChange={handleOnChange}
+                    onBlur={handleBlur}
                 />
                 <TextField
                     label="size"
                     id="size"
                     name="size"
                     onChange={handleOnChange}
+                    onBlur={handleBlur}
                     helperText={formErrors.size}
                 />
                 <InputLabel htmlFor="type" id="type-label">
@@ -95,6 +124,7 @@ const Form = () => {
                     native={false}
                     open={true}
                     onChange={handleOnChange}
+                    onBlur={handleBlur}
                 >
                     <MenuItem value="">
                         <em>None</em>
@@ -106,6 +136,7 @@ const Form = () => {
                 {formErrors.type.length > 0 ? <p>{formErrors.type}</p> : null}
                 <Button
                     type="submit"
+                    disabled={isSaving}
                     variant="contained"
                     style={{top: '400px'}}
                 >

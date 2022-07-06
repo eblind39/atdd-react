@@ -1,13 +1,28 @@
 import React from 'react'
-import {screen, render, fireEvent} from '@testing-library/react'
+import {screen, render, fireEvent, waitFor} from '@testing-library/react'
 import configureMockStore, {MockStoreEnhanced} from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
+import {rest} from 'msw'
+import {setupServer} from 'msw/node'
 
 import Form from './Form'
 
+const server = setupServer(
+    rest.post('/products', (req, res, ctx) => res(ctx.status(201))),
+)
+
+// Enable API mocking before tests.
+beforeAll(() => server.listen({onUnhandledRequest: 'bypass'}))
+
 beforeEach(() => {})
+
+// Reset any runtime request handlers we may add during the tests.
+afterEach(() => server.resetHandlers())
+
+// Disable API mocking after the tests are done.
+afterAll(() => server.close())
 
 describe('when the form is mounted', () => {
     const books = [
@@ -66,7 +81,46 @@ describe('when the form is mounted', () => {
         expect(btns).toHaveLength(1)
         expect(btns[0].innerHTML).toMatch(/submit/i)
     })
-    it('submit > should display validations messages', () => {
+    it('onblur > display a validation error message for input name', () => {
+        render(setup())
+
+        expect(
+            screen.queryByText(/the name is required/i),
+        ).not.toBeInTheDocument()
+
+        fireEvent.blur(screen.getByLabelText(/name/i), {
+            target: {name: 'name', value: ''},
+        })
+
+        expect(screen.queryByText(/the name is required/i)).toBeInTheDocument()
+    })
+    it('onblur > display a validation error message for input size', () => {
+        render(setup())
+
+        expect(
+            screen.queryByText(/the size is required/i),
+        ).not.toBeInTheDocument()
+
+        fireEvent.blur(screen.getByLabelText(/size/i), {
+            target: {name: 'size', value: ''},
+        })
+
+        expect(screen.queryByText(/the size is required/i)).toBeInTheDocument()
+    })
+    // it('onblur > display a validation error message for select type', () => {
+    //     const {container} = render(setup())
+
+    //     expect(
+    //         screen.queryByText(/the type is required/i),
+    //     ).not.toBeInTheDocument()
+
+    //     const selectType = container.getElementsByTagName('select')[0]
+    //     if (selectType)
+    //         fireEvent.blur(selectType, {target: {name: 'type', value: ''}})
+
+    //     expect(screen.queryByText(/the type is required/i)).toBeInTheDocument()
+    // })
+    it('submit > should display validations messages', async () => {
         const {container} = render(setup())
 
         expect(
@@ -85,5 +139,22 @@ describe('when the form is mounted', () => {
         expect(screen.queryByText(/the name is required/i)).toBeInTheDocument()
         expect(screen.queryByText(/the size is required/i)).toBeInTheDocument()
         expect(screen.queryByText(/the type is required/i)).toBeInTheDocument()
+
+        await waitFor(() => {
+            expect(submitBtn).not.toBeDisabled()
+        })
+    })
+    it('submit > button must be disabled until request is completed.', async () => {
+        const {container} = render(setup())
+
+        const submitBtn = container.getElementsByTagName('button')[0]
+
+        expect(submitBtn).not.toBeDisabled()
+        fireEvent.click(submitBtn)
+        expect(submitBtn).toBeDisabled()
+
+        await waitFor(() => {
+            expect(submitBtn).not.toBeDisabled()
+        })
     })
 })
