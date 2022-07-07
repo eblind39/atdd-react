@@ -11,6 +11,8 @@ import CategoryIcon from '@mui/icons-material/Category'
 import SourceIcon from '@mui/icons-material/Source'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import GroupIcon from '@mui/icons-material/Group'
+import ColorLensIcon from '@mui/icons-material/ColorLens'
+import ImagesearchRollerIcon from '@mui/icons-material/ImagesearchRoller'
 import {Link} from 'react-router-dom'
 
 const NavBar: React.FC = (): JSX.Element => {
@@ -55,6 +57,22 @@ const NavBar: React.FC = (): JSX.Element => {
                     </ListItemIcon>
                     <Link to="/users">
                         <Typography variant="inherit">Users</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <ColorLensIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/creative">
+                        <Typography variant="inherit">Creative</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <ImagesearchRollerIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/sketch">
+                        <Typography variant="inherit">Sketch</Typography>
                     </Link>
                 </MenuItem>
             </MenuList>
