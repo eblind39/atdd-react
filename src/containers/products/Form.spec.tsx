@@ -24,7 +24,7 @@ afterEach(() => server.resetHandlers())
 // Disable API mocking after the tests are done.
 afterAll(() => server.close())
 
-describe('when the form is mounted', () => {
+describe('products form', () => {
     const books = [
         {
             id: 1,
@@ -56,7 +56,7 @@ describe('when the form is mounted', () => {
         )
     }
 
-    it('There must be a create product form page', () => {
+    it('mounted > There must be a create product form page', () => {
         render(setup())
         expect(screen.queryByText(/create product/i)).toBeInTheDocument()
 
@@ -64,7 +64,7 @@ describe('when the form is mounted', () => {
         //     screen.getByRole('heading', {name: /create product/i}),
         // ).toBeInTheDocument()
     })
-    it('Should exists the fields: name, size, type (electronic,furniture, clothing)', () => {
+    it('mounted > Should exists the fields: name, size, type (electronic,furniture, clothing)', () => {
         const {container} = render(setup())
         expect(screen.getByLabelText(/name/i)).toBeInTheDocument()
         expect(screen.getByLabelText(/size/i)).toBeInTheDocument()
@@ -75,7 +75,7 @@ describe('when the form is mounted', () => {
         expect(screen.queryByText(/furniture/i)).toBeInTheDocument()
         expect(screen.queryByText(/clothing/i)).toBeInTheDocument()
     })
-    it('should exists the submit button', () => {
+    it('mounted > should exists the submit button', () => {
         const {container} = render(setup())
         const btns = container.getElementsByTagName('button')
         expect(btns).toHaveLength(1)

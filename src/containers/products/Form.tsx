@@ -5,7 +5,7 @@ import Select, {SelectChangeEvent} from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import NavBar from '../NavBar'
-import {API_URL} from '../../app/config'
+import saveProduct from '../../services/productServices'
 
 interface ErrorMssgs {
     name: string
@@ -29,37 +29,25 @@ const Form = () => {
         type: '',
     })
 
+    const validateField = ({name, value}: EvtProps) => {
+        setFormErrors(prevState => ({
+            ...prevState,
+            [name]: !value ? `The ${name} is required` : '',
+        }))
+    }
+
+    const validateForm = () => {
+        validateField({name: 'name', value: name})
+        validateField({name: 'size', value: size})
+        validateField({name: 'type', value: type})
+    }
+
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
+        validateForm()
 
         setIsSaving(true)
-
-        if (!name)
-            setFormErrors(prevState => ({
-                ...prevState,
-                name: 'The name is required',
-            }))
-        if (!size)
-            setFormErrors(prevState => ({
-                ...prevState,
-                size: 'The size is required',
-            }))
-        if (!type)
-            setFormErrors(prevState => ({
-                ...prevState,
-                type: 'The type is required',
-            }))
-
-        await fetch(`${API_URL}/products`, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: 3,
-                name: 'Socks',
-                size: 'M',
-                type: 3,
-            }),
-        })
-
+        await saveProduct()
         setIsSaving(false)
     }
 
@@ -82,11 +70,7 @@ const Form = () => {
     const handleBlur = (e: SyntheticEvent | SelectChangeEvent) => {
         const elem = e.target as HTMLInputElement | HTMLSelectElement
         const {name, value}: EvtProps = elem
-
-        setFormErrors(prevState => ({
-            ...prevState,
-            [name]: value.length ? '' : `The ${name} is required`,
-        }))
+        validateField({name, value})
     }
 
     return (
