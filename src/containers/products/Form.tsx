@@ -17,15 +17,16 @@ interface ErrorMssgs {
 
 interface EvtProps {
     name: string
-    value: string | number
+    value: string
 }
 
 const Form = () => {
     const [name, setName] = useState<string>('')
     const [size, setSize] = useState<string>('')
-    const [type, setType] = useState<number>(0)
+    const [type, setType] = useState<string>('')
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [isSuccess, setIsSuccess] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>('')
     const [formErrors, setFormErrors] = useState<ErrorMssgs>({
         name: '',
         size: '',
@@ -50,14 +51,25 @@ const Form = () => {
         validateForm()
 
         setIsSaving(true)
+
         const response = await saveProduct({
-            name: 'Socks',
-            size: 'XL',
-            type: 3,
+            name,
+            size,
+            type,
         } as Product)
-        if (response.status === HTTPStatusCodes.RESOURCE_CREATED)
+
+        if (response.status === HTTPStatusCodes.RESOURCE_CREATED) {
+            setName('')
+            setSize('')
+            setType('')
             setIsSuccess(true)
-        else setIsSuccess(false)
+            setErrorMessage('')
+        } else {
+            if (response.status === HTTPStatusCodes.SERVER_ERROR) {
+                setErrorMessage('Unexpected error, please try again')
+            }
+            setIsSuccess(false)
+        }
         setIsSaving(false)
     }
 
@@ -72,7 +84,7 @@ const Form = () => {
                 setSize(value)
                 break
             case 'type':
-                setType(Number(value))
+                setType(value)
                 break
         }
     }
@@ -90,11 +102,13 @@ const Form = () => {
                 Create Product
             </Typography>
             {isSuccess ? <p>Product stored</p> : null}
+            {errorMessage ? <p>{errorMessage}</p> : null}
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="name"
                     id="name"
                     name="name"
+                    value={name}
                     helperText={formErrors.name}
                     onChange={handleOnChange}
                     onBlur={handleBlur}
@@ -103,6 +117,7 @@ const Form = () => {
                     label="size"
                     id="size"
                     name="size"
+                    value={size}
                     onChange={handleOnChange}
                     onBlur={handleBlur}
                     helperText={formErrors.size}
@@ -114,7 +129,7 @@ const Form = () => {
                     labelId="type-label"
                     id="type"
                     name="type"
-                    value=""
+                    value={type}
                     label="type"
                     native={false}
                     open={true}

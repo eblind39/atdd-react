@@ -1,26 +1,40 @@
 import React from 'react'
 import {screen, render, fireEvent, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import configureMockStore, {MockStoreEnhanced} from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
-import {rest} from 'msw'
+import {ResponseTransformer, rest} from 'msw'
 import {setupServer} from 'msw/node'
 import {HTTPStatusCodes} from '../../types/HttpCodes'
 
 import Form from './Form'
 
-const server = setupServer(
-    rest.post('/productsMSW', (req, res, ctx) => {
-        const name = req.params['name']
-        const size = req.params['size']
-        const type = req.params['type']
-        if (name && size && type) {
-            return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
-        }
+interface ProductBody {
+    name: string
+    size: string
+    type: string
+}
 
-        return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
-    }),
+// interface ProductResponse {
+//     statusCode: number
+//     statusText?: string | undefined
+// }
+
+const server = setupServer(
+    rest.post<ProductBody, ResponseTransformer>(
+        '/productsMSW',
+        (req, res, ctx) => {
+            const {name, size, type}: ProductBody = req.body
+
+            if (name && size) {
+                return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
+            }
+
+            return res(ctx.status(HTTPStatusCodes.SERVER_ERROR))
+        },
+    ),
 )
 
 // Enable API mocking before tests.
@@ -158,6 +172,13 @@ describe('products form', () => {
         const {container} = render(setup())
         const submitBtn = container.getElementsByTagName('button')[0]
 
+        const name = container.querySelector('#name')
+        const size = container.querySelector('#size')
+        const type = container.querySelector('#type')
+        if (name) userEvent.type(name, 'Socks')
+        if (size) userEvent.type(size, 'L')
+        if (type) userEvent.type(type, '3')
+
         expect(submitBtn).not.toBeDisabled()
         fireEvent.click(submitBtn)
         expect(submitBtn).toBeDisabled()
@@ -166,12 +187,35 @@ describe('products form', () => {
             expect(submitBtn).not.toBeDisabled()
         })
     })
-    it('after submit > on data saved display Product stored', async () => {
+    it('after submit > on data saved display Product stored & clean fields', async () => {
         const {container} = render(setup())
         const submitBtn = container.getElementsByTagName('button')[0]
+
+        const name = container.querySelector('#name')
+        const size = container.querySelector('#size')
+        const type = container.querySelector(`input[name="type"]`)
+        if (name) fireEvent.change(name, {target: {value: 'Socks2'}})
+        if (size) fireEvent.change(size, {target: {value: 'L2'}})
+        if (type) fireEvent.change(type, {target: {value: '3'}})
+
         fireEvent.click(submitBtn)
         await waitFor(() => {
             expect(screen.getByText(/product stored/i)).toBeInTheDocument()
+        })
+
+        expect(name).toHaveValue('')
+        expect(size).toHaveValue('')
+        expect(type).toHaveValue('')
+    })
+    it('on server error > display "Unexpected error, please try again"', async () => {
+        const {container} = render(setup())
+        const submitBtn = container.getElementsByTagName('button')[0]
+
+        fireEvent.click(submitBtn)
+        await waitFor(() => {
+            expect(
+                screen.getByText(/unexpected error, please try again/i),
+            ).toBeInTheDocument()
         })
     })
 })

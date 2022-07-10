@@ -2,7 +2,7 @@ interface Product {
     id: number
     name: string
     size: string
-    type: number
+    type: string
 }
 
 export {Product}
