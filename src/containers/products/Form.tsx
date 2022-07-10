@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import NavBar from '../NavBar'
 import saveProduct from '../../services/productServices'
+import {HTTPStatusCodes} from '../../types/Product'
 
 interface ErrorMssgs {
     name: string
@@ -23,6 +24,7 @@ const Form = () => {
     const [size, setSize] = useState<string>('')
     const [type, setType] = useState<number>(0)
     const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isSuccess, setIsSuccess] = useState<boolean>(false)
     const [formErrors, setFormErrors] = useState<ErrorMssgs>({
         name: '',
         size: '',
@@ -47,7 +49,10 @@ const Form = () => {
         validateForm()
 
         setIsSaving(true)
-        await saveProduct()
+        const response = await saveProduct()
+        if (response.status === HTTPStatusCodes.RESOURCE_CREATED)
+            setIsSuccess(true)
+        else setIsSuccess(false)
         setIsSaving(false)
     }
 
@@ -79,6 +84,7 @@ const Form = () => {
             <Typography variant="h1" component="h1" data-test="heading">
                 Create Product
             </Typography>
+            {isSuccess ? <p>Product stored</p> : null}
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="name"

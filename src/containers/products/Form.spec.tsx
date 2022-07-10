@@ -146,7 +146,6 @@ describe('products form', () => {
     })
     it('submit > button must be disabled until request is completed.', async () => {
         const {container} = render(setup())
-
         const submitBtn = container.getElementsByTagName('button')[0]
 
         expect(submitBtn).not.toBeDisabled()
@@ -155,6 +154,14 @@ describe('products form', () => {
 
         await waitFor(() => {
             expect(submitBtn).not.toBeDisabled()
+        })
+    })
+    it('after submit > on data saved display Product stored', async () => {
+        const {container} = render(setup())
+        const submitBtn = container.getElementsByTagName('button')[0]
+        fireEvent.click(submitBtn)
+        await waitFor(() => {
+            expect(screen.getByText(/product stored/i)).toBeInTheDocument()
         })
     })
 })
