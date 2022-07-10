@@ -6,7 +6,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import NavBar from '../NavBar'
 import saveProduct from '../../services/productServices'
-import {HTTPStatusCodes} from '../../types/Product'
+import {HTTPStatusCodes} from '../../types/HttpCodes'
+import {Product} from '../../types/Product'
 
 interface ErrorMssgs {
     name: string
@@ -49,7 +50,11 @@ const Form = () => {
         validateForm()
 
         setIsSaving(true)
-        const response = await saveProduct()
+        const response = await saveProduct({
+            name: 'Socks',
+            size: 'XL',
+            type: 3,
+        } as Product)
         if (response.status === HTTPStatusCodes.RESOURCE_CREATED)
             setIsSuccess(true)
         else setIsSuccess(false)

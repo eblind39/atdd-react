@@ -6,11 +6,21 @@ import {Provider} from 'react-redux'
 import {BrowserRouter} from 'react-router-dom'
 import {rest} from 'msw'
 import {setupServer} from 'msw/node'
+import {HTTPStatusCodes} from '../../types/HttpCodes'
 
 import Form from './Form'
 
 const server = setupServer(
-    rest.post('/products', (req, res, ctx) => res(ctx.status(201))),
+    rest.post('/productsMSW', (req, res, ctx) => {
+        const name = req.params['name']
+        const size = req.params['size']
+        const type = req.params['type']
+        if (name && size && type) {
+            return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
+        }
+
+        return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
+    }),
 )
 
 // Enable API mocking before tests.
