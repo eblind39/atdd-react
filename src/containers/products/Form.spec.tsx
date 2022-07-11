@@ -17,11 +17,6 @@ interface ProductBody {
     type: string
 }
 
-// interface ProductResponse {
-//     statusCode: number
-//     statusText?: string | undefined
-// }
-
 const server = setupServer(
     rest.post<ProductBody, ResponseTransformer>(
         '/productsMSW',
@@ -172,13 +167,6 @@ describe('products form', () => {
         const {container} = render(setup())
         const submitBtn = container.getElementsByTagName('button')[0]
 
-        const name = container.querySelector('#name')
-        const size = container.querySelector('#size')
-        const type = container.querySelector('#type')
-        if (name) userEvent.type(name, 'Socks')
-        if (size) userEvent.type(size, 'L')
-        if (type) userEvent.type(type, '3')
-
         expect(submitBtn).not.toBeDisabled()
         fireEvent.click(submitBtn)
         expect(submitBtn).toBeDisabled()
@@ -199,6 +187,10 @@ describe('products form', () => {
         if (type) fireEvent.change(type, {target: {value: '3'}})
 
         fireEvent.click(submitBtn)
+
+        // const msgExp = await screen.findByText(/product stored/i)
+        // expect(msgExp).toBeInTheDocument()
+
         await waitFor(() => {
             expect(screen.getByText(/product stored/i)).toBeInTheDocument()
         })
@@ -212,9 +204,73 @@ describe('products form', () => {
         const submitBtn = container.getElementsByTagName('button')[0]
 
         fireEvent.click(submitBtn)
+
+        // const msgExp = await screen.findByText(
+        //     /unexpected error, please try again/i,
+        // )
+        // expect(msgExp).toBeInTheDocument()
+
         await waitFor(() => {
             expect(
                 screen.getByText(/unexpected error, please try again/i),
+            ).toBeInTheDocument()
+        })
+    })
+    it('on bad request > display "The form is invalid, the fields [field1,... fieldN] are required"', async () => {
+        server.use(
+            rest.post<ProductBody, ResponseTransformer>(
+                '/productsMSW',
+                (req, res, ctx) => {
+                    return res(
+                        ctx.status(HTTPStatusCodes.BAD_REQUEST),
+                        ctx.json({
+                            message:
+                                'The form is invalid, the fields name, size, type are required',
+                        }),
+                    )
+                },
+            ),
+        )
+
+        const {container} = render(setup())
+        const submitBtn = container.getElementsByTagName('button')[0]
+
+        fireEvent.click(submitBtn)
+
+        const msgExp = await screen.findByText(
+            /the form is invalid, the fields name, size, type are required/i,
+        )
+        expect(msgExp).toBeInTheDocument()
+
+        // // await waitFor(() => {
+        // //     expect(
+        // //         screen.getByText(
+        // //             /the form is invalid, the fields name, size, type are required/i,
+        // //         ),
+        // //     ).toBeInTheDocument()
+        // // })
+    })
+    it.skip('on no connection > display "Connection error, please try again"', async () => {
+        server.use(
+            rest.post<ProductBody, ResponseTransformer>(
+                '/productsMSW',
+                (req, res, ctx) => res.networkError('Failed to connect'),
+            ),
+        )
+
+        const {container} = render(setup())
+        const submitBtn = container.getElementsByTagName('button')[0]
+
+        fireEvent.click(submitBtn)
+
+        // const msgExp = await screen.findByText(
+        //     /connection error, please try again/i,
+        // )
+        // expect(msgExp).toBeInTheDocument()
+
+        await waitFor(() => {
+            expect(
+                screen.getByText(/connection error, please try again/i),
             ).toBeInTheDocument()
         })
     })

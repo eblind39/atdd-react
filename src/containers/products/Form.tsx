@@ -4,6 +4,8 @@ import InputLabel from '@mui/material/InputLabel'
 import Select, {SelectChangeEvent} from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
 import NavBar from '../NavBar'
 import saveProduct from '../../services/productServices'
 import {HTTPStatusCodes} from '../../types/HttpCodes'
@@ -62,14 +64,24 @@ const Form = () => {
             setName('')
             setSize('')
             setType('')
-            setIsSuccess(true)
             setErrorMessage('')
+            setIsSuccess(true)
+            return
         } else {
+            setIsSuccess(false)
+            setIsSaving(false)
             if (response.status === HTTPStatusCodes.SERVER_ERROR) {
                 setErrorMessage('Unexpected error, please try again')
+                return
             }
-            setIsSuccess(false)
+            if (response.status === HTTPStatusCodes.BAD_REQUEST) {
+                const data = await response.json()
+                setErrorMessage(data.message)
+                return
+            }
+            setErrorMessage('Connection error, please try again')
         }
+
         setIsSaving(false)
     }
 
@@ -98,61 +110,89 @@ const Form = () => {
     return (
         <React.Fragment>
             <NavBar />
-            <Typography variant="h1" component="h1" data-test="heading">
-                Create Product
-            </Typography>
-            {isSuccess ? <p>Product stored</p> : null}
-            {errorMessage ? <p>{errorMessage}</p> : null}
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="name"
-                    id="name"
-                    name="name"
-                    value={name}
-                    helperText={formErrors.name}
-                    onChange={handleOnChange}
-                    onBlur={handleBlur}
-                />
-                <TextField
-                    label="size"
-                    id="size"
-                    name="size"
-                    value={size}
-                    onChange={handleOnChange}
-                    onBlur={handleBlur}
-                    helperText={formErrors.size}
-                />
-                <InputLabel htmlFor="type" id="type-label">
-                    Type
-                </InputLabel>
-                <Select
-                    labelId="type-label"
-                    id="type"
-                    name="type"
-                    value={type}
-                    label="type"
-                    native={false}
-                    open={true}
-                    onChange={handleOnChange}
-                    onBlur={handleBlur}
-                >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={1}>Electronic</MenuItem>
-                    <MenuItem value={2}>Furniture</MenuItem>
-                    <MenuItem value={3}>Clothing</MenuItem>
-                </Select>
-                {formErrors.type.length > 0 ? <p>{formErrors.type}</p> : null}
-                <Button
-                    type="submit"
-                    disabled={isSaving}
-                    variant="contained"
-                    style={{top: '400px'}}
-                >
-                    Submit
-                </Button>
-            </form>
+            <Container maxWidth="sm">
+                {isSuccess ? <p>Product stored</p> : null}
+                {errorMessage ? <p>{errorMessage}</p> : null}
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                            <Typography
+                                variant="h3"
+                                component="h3"
+                                data-test="heading"
+                                align="center"
+                            >
+                                Create Product
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="name"
+                                id="name"
+                                name="name"
+                                value={name}
+                                helperText={formErrors.name}
+                                error={!!formErrors.name.length}
+                                onChange={handleOnChange}
+                                onBlur={handleBlur}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="size"
+                                id="size"
+                                name="size"
+                                value={size}
+                                onChange={handleOnChange}
+                                onBlur={handleBlur}
+                                helperText={formErrors.size}
+                                error={!!formErrors.size.length}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel htmlFor="type" id="type-label">
+                                Type
+                            </InputLabel>
+                            <Select
+                                labelId="type-label"
+                                id="type"
+                                name="type"
+                                value={type}
+                                label="type"
+                                native={false}
+                                open={true}
+                                onChange={handleOnChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.type.length}
+                                fullWidth
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={1}>Electronic</MenuItem>
+                                <MenuItem value={2}>Furniture</MenuItem>
+                                <MenuItem value={3}>Clothing</MenuItem>
+                            </Select>
+                            {formErrors.type.length > 0 ? (
+                                <p>{formErrors.type}</p>
+                            ) : null}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                disabled={isSaving}
+                                variant="contained"
+                                style={{top: '170px'}}
+                                fullWidth
+                            >
+                                Submit
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Container>
         </React.Fragment>
     )
 }
