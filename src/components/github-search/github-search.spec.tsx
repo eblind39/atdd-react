@@ -1,10 +1,10 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react'
-import GithubSearchPage from './github-search-page'
+import GithubSearch from './github-search'
 
 describe('when the GithubSearchPage is mounted', () => {
     it('must display the title', () => {
-        render(<GithubSearchPage />)
+        render(<GithubSearch />)
 
         expect(
             screen.getByRole('heading', {

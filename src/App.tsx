@@ -8,6 +8,7 @@ import Users from './containers/Users'
 import Form from './containers/products/Form'
 import CreativAnims from './containers/CreativAnims'
 import CreativeCSketch from './containers/CreativeCSketch'
+import GithubSearchPage from './containers/GithubSearchPage'
 import NotFoundPage from './utils/NotFoundPage'
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
             <Route path="/products" element={<Form />} />
             <Route path="/creative" element={<CreativAnims />} />
             <Route path="/sketch" element={<CreativeCSketch />} />
+            <Route path="/gitsearch" element={<GithubSearchPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )

@@ -13,6 +13,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook'
 import GroupIcon from '@mui/icons-material/Group'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 import ImagesearchRollerIcon from '@mui/icons-material/ImagesearchRoller'
+import ManageSearchIcon from '@mui/icons-material/ManageSearch'
 import {Link} from 'react-router-dom'
 
 const NavBar: React.FC = (): JSX.Element => {
@@ -33,6 +34,14 @@ const NavBar: React.FC = (): JSX.Element => {
                     </ListItemIcon>
                     <Link to="/products">
                         <Typography variant="inherit">Products</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <ManageSearchIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/gitsearch">
+                        <Typography variant="inherit">GitSearch</Typography>
                     </Link>
                 </MenuItem>
                 <MenuItem>
