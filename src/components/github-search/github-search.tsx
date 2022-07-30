@@ -9,11 +9,13 @@ import Grid from '@mui/material/Grid'
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
+    const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
 
     const handleClick = async (evt: SyntheticEvent) => {
         setIsSearching(true)
         await Promise.resolve()
         setIsSearching(false)
+        setIsSearchApplied(true)
     }
 
     return (
@@ -49,24 +51,28 @@ const GithubSearch = () => {
                         </Button>
                     </Grid>
                 </Grid>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{
-                        height: 50,
-                        color: 'primary.dark',
-                        '&:hover': {
-                            color: 'primary.main',
-                            opacity: [0.9, 0.8, 0.7],
-                        },
-                    }}
-                >
-                    <Typography component="label">
-                        Please provide a search option and click in the search
-                        button
-                    </Typography>
-                </Box>
+                {isSearchApplied ? (
+                    <table />
+                ) : (
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{
+                            height: 50,
+                            color: 'primary.dark',
+                            '&:hover': {
+                                color: 'primary.main',
+                                opacity: [0.9, 0.8, 0.7],
+                            },
+                        }}
+                    >
+                        <Typography component="label">
+                            Please provide a search option and click in the
+                            search button
+                        </Typography>
+                    </Box>
+                )}
             </Container>
         </React.Fragment>
     )
