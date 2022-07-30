@@ -1,5 +1,12 @@
 import React from 'react'
-import {render, screen, fireEvent, waitFor} from '@testing-library/react'
+import {
+    render,
+    screen,
+    fireEvent,
+    waitFor,
+    findByRole,
+    within,
+} from '@testing-library/react'
 import GithubSearch from './github-search'
 
 beforeEach(() => {
@@ -41,8 +48,8 @@ describe('when the GithubSearchPage is mounted', () => {
     })
     it('the data should be displayed as a sticky table', async () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
-
         fireEvent.click(btnSearch)
+
         await waitFor(() => {
             expect(
                 screen.queryByText(
@@ -52,5 +59,23 @@ describe('when the GithubSearchPage is mounted', () => {
         })
 
         expect(screen.getByRole('table')).toBeInTheDocument()
+    })
+    it('the header table should contain: Repository, stars, forks, open issues and updated at', async () => {
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        const table = await screen.findByRole('table')
+        const tableHeaders = within(table).getAllByRole('columnheader')
+
+        expect(tableHeaders).toHaveLength(5)
+
+        const [repoHdr, startHdr, forksHdr, openIssCol, updatAtHdr] =
+            tableHeaders
+
+        expect(repoHdr).toHaveTextContent(/repository/i)
+        expect(startHdr).toHaveTextContent(/stars/i)
+        expect(forksHdr).toHaveTextContent(/forks/i)
+        expect(openIssCol).toHaveTextContent(/open issues/i)
+        expect(updatAtHdr).toHaveTextContent(/updated at/i)
     })
 })

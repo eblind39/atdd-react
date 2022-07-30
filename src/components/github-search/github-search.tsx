@@ -18,6 +18,40 @@ const GithubSearch = () => {
         setIsSearchApplied(true)
     }
 
+    const renderContent = () =>
+        isSearchApplied ? (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Repository</th>
+                        <th>Stars</th>
+                        <th>Forks</th>
+                        <th>Open issues</th>
+                        <th>Uupdated at</th>
+                    </tr>
+                </thead>
+            </table>
+        ) : (
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                    height: 50,
+                    color: 'primary.dark',
+                    '&:hover': {
+                        color: 'primary.main',
+                        opacity: [0.9, 0.8, 0.7],
+                    },
+                }}
+            >
+                <Typography component="label">
+                    Please provide a search option and click in the search
+                    button
+                </Typography>
+            </Box>
+        )
+
     return (
         <React.Fragment>
             <CssBaseline />
@@ -51,28 +85,7 @@ const GithubSearch = () => {
                         </Button>
                     </Grid>
                 </Grid>
-                {isSearchApplied ? (
-                    <table />
-                ) : (
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        sx={{
-                            height: 50,
-                            color: 'primary.dark',
-                            '&:hover': {
-                                color: 'primary.main',
-                                opacity: [0.9, 0.8, 0.7],
-                            },
-                        }}
-                    >
-                        <Typography component="label">
-                            Please provide a search option and click in the
-                            search button
-                        </Typography>
-                    </Box>
-                )}
+                {renderContent()}
             </Container>
         </React.Fragment>
     )
