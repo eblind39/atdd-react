@@ -1,11 +1,11 @@
 import React, {SyntheticEvent, useState} from 'react'
-import {Typography} from '@mui/material'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
+import Content from './github-search-cont'
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -18,53 +18,10 @@ const GithubSearch = () => {
         setIsSearchApplied(true)
     }
 
-    const renderContent = () =>
-        isSearchApplied ? (
-            <table>
-                <thead>
-                    <tr>
-                        <th>Repository</th>
-                        <th>Stars</th>
-                        <th>Forks</th>
-                        <th>Open issues</th>
-                        <th>Updated at</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Test</td>
-                        <td>10</td>
-                        <td>5</td>
-                        <td>2</td>
-                        <td>2022-01-01</td>
-                    </tr>
-                </tbody>
-            </table>
-        ) : (
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                sx={{
-                    height: 50,
-                    color: 'primary.dark',
-                    '&:hover': {
-                        color: 'primary.main',
-                        opacity: [0.9, 0.8, 0.7],
-                    },
-                }}
-            >
-                <Typography component="label">
-                    Please provide a search option and click in the search
-                    button
-                </Typography>
-            </Box>
-        )
-
     return (
         <React.Fragment>
             <CssBaseline />
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
                 <Typography variant="h3" component="h1">
                     github repositories list
                 </Typography>
@@ -94,7 +51,7 @@ const GithubSearch = () => {
                         </Button>
                     </Grid>
                 </Grid>
-                {renderContent()}
+                <Content isSearchApplied={isSearchApplied} />
             </Container>
         </React.Fragment>
     )

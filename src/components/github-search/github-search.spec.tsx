@@ -78,20 +78,36 @@ describe('when the GithubSearchPage is mounted', () => {
         expect(openIssCol).toHaveTextContent(/open issues/i)
         expect(updatAtHdr).toHaveTextContent(/updated at/i)
     })
-    it('each table result must contain: name, stars, updated at, forks, open issues', async () => {
+    it(`each table result must contain: owner avatar image, name, stars, updated at, forks, open issues, 
+        It should have a link that opens in a new tab the github repository selected`, async () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
 
         const table = await screen.findByRole('table')
         const tableCells = within(table).getAllByRole('cell')
+        const [repository, stars, forks, openIssues, updatedAt] = tableCells
 
+        expect(
+            within(repository).getByRole('img', {name: /test/i}),
+        ).toBeInTheDocument()
         expect(tableCells).toHaveLength(5)
 
-        const [repository, stars, forks, openIssues, updatedAt] = tableCells
         expect(repository).toHaveTextContent(/test/i)
         expect(stars).toHaveTextContent(/10/i)
         expect(forks).toHaveTextContent(/5/i)
         expect(openIssues).toHaveTextContent(/2/i)
         expect(updatedAt).toHaveTextContent(/2022-01-01/i)
+
+        expect(within(table).getByText(/test/i).closest('a')).toHaveAttribute(
+            'href',
+            'http://localhost:3000/test',
+        )
+    })
+    it('total results number of the search and the current number of results', async () => {
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        const table = await screen.findByRole('table')
+        expect(screen.getByText(/1–1 of 1/i)).toBeInTheDocument()
     })
 })
