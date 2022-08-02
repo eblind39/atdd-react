@@ -78,4 +78,20 @@ describe('when the GithubSearchPage is mounted', () => {
         expect(openIssCol).toHaveTextContent(/open issues/i)
         expect(updatAtHdr).toHaveTextContent(/updated at/i)
     })
+    it('each table result must contain: name, stars, updated at, forks, open issues', async () => {
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        const table = await screen.findByRole('table')
+        const tableCells = within(table).getAllByRole('cell')
+
+        expect(tableCells).toHaveLength(5)
+
+        const [repository, stars, forks, openIssues, updatedAt] = tableCells
+        expect(repository).toHaveTextContent(/test/i)
+        expect(stars).toHaveTextContent(/10/i)
+        expect(forks).toHaveTextContent(/5/i)
+        expect(openIssues).toHaveTextContent(/2/i)
+        expect(updatedAt).toHaveTextContent(/2022-01-01/i)
+    })
 })

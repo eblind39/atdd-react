@@ -27,9 +27,18 @@ const GithubSearch = () => {
                         <th>Stars</th>
                         <th>Forks</th>
                         <th>Open issues</th>
-                        <th>Uupdated at</th>
+                        <th>Updated at</th>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr>
+                        <td>Test</td>
+                        <td>10</td>
+                        <td>5</td>
+                        <td>2</td>
+                        <td>2022-01-01</td>
+                    </tr>
+                </tbody>
             </table>
         ) : (
             <Box
