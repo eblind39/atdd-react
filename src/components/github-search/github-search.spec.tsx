@@ -107,7 +107,25 @@ describe('when the GithubSearchPage is mounted', () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
 
-        const table = await screen.findByRole('table')
+        await screen.findByRole('table')
         expect(screen.getByText(/1–1 of 1/i)).toBeInTheDocument()
+    })
+    it('results size per page select/combobox with the options: 30, 50, 100. The default is 30', async () => {
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        await screen.findByRole('table')
+
+        expect(screen.getByLabelText(/rows per page/i)).toBeInTheDocument()
+
+        fireEvent.mouseDown(screen.getByLabelText(/rows per page/i))
+        const listbox = screen.getByRole('listbox', {name: /rows per page/i})
+        const options = within(listbox).getAllByRole('option')
+        expect(options).toHaveLength(3)
+
+        const [option30, option50, option100] = options
+        expect(option30).toHaveTextContent(/30/i)
+        expect(option50).toHaveTextContent(/50/i)
+        expect(option100).toHaveTextContent(/100/i)
     })
 })

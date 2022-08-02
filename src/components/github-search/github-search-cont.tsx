@@ -59,10 +59,10 @@ const Content = ({isSearchApplied}: Props) =>
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[30, 50, 100]}
                 component="div"
                 count={1}
-                rowsPerPage={10}
+                rowsPerPage={30}
                 page={0}
                 onPageChange={() => {}}
                 onRowsPerPageChange={() => {}}

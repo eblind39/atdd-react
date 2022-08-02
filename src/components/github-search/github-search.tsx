@@ -31,11 +31,6 @@ const GithubSearch = () => {
                             label="Filter by"
                             id="filter"
                             name="filter"
-                            // value={name}
-                            // helperText={formErrors.name}
-                            // error={!!formErrors.name.length}
-                            // onChange={handleOnChange}
-                            // onBlur={handleBlur}
                             fullWidth
                         />
                     </Grid>
