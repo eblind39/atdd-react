@@ -128,4 +128,21 @@ describe('when the GithubSearchPage is mounted', () => {
         expect(option50).toHaveTextContent(/50/i)
         expect(option100).toHaveTextContent(/100/i)
     })
+    it('must exists next and previous pagination buttons', async () => {
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        await screen.findByRole('table')
+
+        const previousPageBtn = screen.getByRole('button', {
+            name: /previous page/i,
+        })
+
+        expect(previousPageBtn).toBeInTheDocument()
+        expect(
+            screen.getByRole('button', {name: /next page/i}),
+        ).toBeInTheDocument()
+
+        expect(previousPageBtn).toBeDisabled()
+    })
 })
