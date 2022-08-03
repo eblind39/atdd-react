@@ -183,4 +183,30 @@ describe('when the GithubSearchPage is mounted', () => {
 
         expect(previousPageBtn).toBeDisabled()
     })
+    it('when no results, then show a empty state message “Your search has no results”', async () => {
+        // set msw to return empty data
+        server.use(
+            rest.get('/search/repositories', (req, res, ctx) =>
+                res(
+                    ctx.status(200),
+                    ctx.json({
+                        total_count: 0,
+                        incomplete_results: false,
+                        items: [],
+                    }),
+                ),
+            ),
+        )
+
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        await waitFor(() =>
+            expect(
+                screen.getByText(/your search has no results/i),
+            ).toBeInTheDocument(),
+        )
+
+        expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    })
 })
