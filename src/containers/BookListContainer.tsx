@@ -26,7 +26,7 @@ const BookListContainer = () => {
 
     useEffect(() => {
         dispatch(getBooks(term))
-    }, [term])
+    }, [dispatch, term])
 
     return (
         <React.Fragment>

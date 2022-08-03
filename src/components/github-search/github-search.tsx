@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Content from './github-search-cont'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
+import {getRepos} from '../../services/gitrepoService'
+import {gitRepoBaseUrl} from '../../app/config'
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -14,8 +16,9 @@ const GithubSearch = () => {
     const [reposList, setReposList] = useState<RepoRoot[]>([])
 
     const handleClick = async (evt: SyntheticEvent) => {
+        console.log(gitRepoBaseUrl)
         setIsSearching(true)
-        const response = await fetch('/search/repositories')
+        const response = await getRepos()
         const data: FullDataRepo = await response.json()
         console.log(data)
         setReposList(data.items)
