@@ -6,14 +6,19 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Content from './github-search-cont'
+import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
+    const [reposList, setReposList] = useState<RepoRoot[]>([])
 
     const handleClick = async (evt: SyntheticEvent) => {
         setIsSearching(true)
-        await Promise.resolve()
+        const response = await fetch('/search/repositories')
+        const data: FullDataRepo = await response.json()
+        console.log(data)
+        setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
     }
@@ -46,7 +51,10 @@ const GithubSearch = () => {
                         </Button>
                     </Grid>
                 </Grid>
-                <Content isSearchApplied={isSearchApplied} />
+                <Content
+                    isSearchApplied={isSearchApplied}
+                    reposList={reposList}
+                />
             </Container>
         </React.Fragment>
     )

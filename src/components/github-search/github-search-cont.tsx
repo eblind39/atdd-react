@@ -12,6 +12,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import Avatar from '@mui/material/Avatar'
 import Link from '@mui/material/Link'
+import {RepoRoot} from '../../types/githubrepo'
 
 const tableHeaders = [
     'Repository',
@@ -23,9 +24,10 @@ const tableHeaders = [
 
 interface Props {
     isSearchApplied: boolean
+    reposList: RepoRoot[]
 }
 
-const Content = ({isSearchApplied}: Props) =>
+const Content = ({isSearchApplied, reposList}: Props) =>
     isSearchApplied ? (
         <Paper>
             <TableContainer>
@@ -43,18 +45,37 @@ const Content = ({isSearchApplied}: Props) =>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow>
-                            <TableCell component="td">
-                                <Avatar alt="test" src="/logo192.png" />
-                                <Link href="http://localhost:3000/test">
-                                    Test
-                                </Link>
-                            </TableCell>
-                            <TableCell component="td">10</TableCell>
-                            <TableCell component="td">5</TableCell>
-                            <TableCell component="td">2</TableCell>
-                            <TableCell component="td">2022-01-01</TableCell>
-                        </TableRow>
+                        {reposList.map(
+                            ({
+                                id,
+                                name,
+                                stargazers_count: stargazersCount,
+                                forks_count: forksCount,
+                                open_issues_count: openIssuesCount,
+                                updated_at: updatedAt,
+                                html_url: htmlUrl,
+                                owner: {avatar_url: avatarUrl},
+                            }) => (
+                                <TableRow key={id}>
+                                    <TableCell component="td">
+                                        <Avatar alt={name} src={avatarUrl} />
+                                        <Link href={htmlUrl}>{name}</Link>
+                                    </TableCell>
+                                    <TableCell component="td">
+                                        {stargazersCount}
+                                    </TableCell>
+                                    <TableCell component="td">
+                                        {forksCount}
+                                    </TableCell>
+                                    <TableCell component="td">
+                                        {openIssuesCount}
+                                    </TableCell>
+                                    <TableCell component="td">
+                                        {updatedAt}
+                                    </TableCell>
+                                </TableRow>
+                            ),
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

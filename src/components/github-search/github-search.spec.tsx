@@ -4,10 +4,44 @@ import {
     screen,
     fireEvent,
     waitFor,
-    findByRole,
     within,
 } from '@testing-library/react'
 import GithubSearch from './github-search'
+import {rest} from 'msw'
+import {setupServer} from 'msw/node'
+
+const fakeRepo = {
+    id: 5383731,
+    name: 'qemu',
+    html_url: 'https://github.com/qemu/qemu',
+    updated_at: '2022-08-02',
+    stargazers_count: 6490,
+    forks_count: 4118,
+    open_issues_count: 0,
+    owner: {
+        id: '2137033',
+        avatar_url: 'https://avatars.githubusercontent.com/u/2137033?v=4',
+    },
+}
+
+const server = setupServer(
+    rest.get('/search/repositories', (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json({
+                total_count: 1575097,
+                incomplete_results: false,
+                items: [fakeRepo],
+            }),
+        )
+    }),
+)
+
+beforeAll(() => server.listen())
+
+afterEach(() => server.resetHandlers())
+
+afterAll(() => server.close())
 
 beforeEach(() => {
     render(<GithubSearch />)
@@ -86,22 +120,26 @@ describe('when the GithubSearchPage is mounted', () => {
         const table = await screen.findByRole('table')
         const tableCells = within(table).getAllByRole('cell')
         const [repository, stars, forks, openIssues, updatedAt] = tableCells
+        const avatarImg = within(repository).getByRole('img', {
+            name: fakeRepo.name,
+        })
 
-        expect(
-            within(repository).getByRole('img', {name: /test/i}),
-        ).toBeInTheDocument()
+        expect(avatarImg).toBeInTheDocument()
         expect(tableCells).toHaveLength(5)
 
-        expect(repository).toHaveTextContent(/test/i)
-        expect(stars).toHaveTextContent(/10/i)
-        expect(forks).toHaveTextContent(/5/i)
-        expect(openIssues).toHaveTextContent(/2/i)
-        expect(updatedAt).toHaveTextContent(/2022-01-01/i)
-
-        expect(within(table).getByText(/test/i).closest('a')).toHaveAttribute(
-            'href',
-            'http://localhost:3000/test',
+        expect(repository).toHaveTextContent(fakeRepo.name)
+        expect(stars).toHaveTextContent(fakeRepo.stargazers_count.toString())
+        expect(forks).toHaveTextContent(fakeRepo.forks_count.toString())
+        expect(openIssues).toHaveTextContent(
+            fakeRepo.open_issues_count.toString(),
         )
+        expect(updatedAt).toHaveTextContent(fakeRepo.updated_at)
+
+        expect(
+            within(table).getByText(fakeRepo.name).closest('a'),
+        ).toHaveAttribute('href', fakeRepo.html_url)
+
+        expect(avatarImg).toHaveAttribute('src', fakeRepo.owner.avatar_url)
     })
     it('total results number of the search and the current number of results', async () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
