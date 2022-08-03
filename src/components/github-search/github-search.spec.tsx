@@ -9,32 +9,18 @@ import {
 import GithubSearch from './github-search'
 import {rest} from 'msw'
 import {setupServer} from 'msw/node'
+import {HTTPStatusCodes} from '../../types/HttpCodes'
+import {makeFakeResponse, makeFakeRepo} from '../../__fixtures__/gitrepo'
+import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 
-const fakeRepo = {
-    id: 5383731,
-    name: 'qemu',
-    html_url: 'https://github.com/qemu/qemu',
-    updated_at: '2022-08-02',
-    stargazers_count: 6490,
-    forks_count: 4118,
-    open_issues_count: 0,
-    owner: {
-        id: '2137033',
-        avatar_url: 'https://avatars.githubusercontent.com/u/2137033?v=4',
-    },
-}
+const fakeResponse: FullDataRepo = makeFakeResponse({totalCount: 1})
+const fakeRepo: RepoRoot = makeFakeRepo()
+fakeResponse.items = [fakeRepo]
 
 const server = setupServer(
-    rest.get('/search/repositories', (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({
-                total_count: 1575097,
-                incomplete_results: false,
-                items: [fakeRepo],
-            }),
-        )
-    }),
+    rest.get('/search/repositories', (req, res, ctx) =>
+        res(ctx.status(HTTPStatusCodes.OK_STATUS), ctx.json(fakeResponse)),
+    ),
 )
 
 beforeAll(() => server.listen())
@@ -188,12 +174,8 @@ describe('when the GithubSearchPage is mounted', () => {
         server.use(
             rest.get('/search/repositories', (req, res, ctx) =>
                 res(
-                    ctx.status(200),
-                    ctx.json({
-                        total_count: 0,
-                        incomplete_results: false,
-                        items: [],
-                    }),
+                    ctx.status(HTTPStatusCodes.OK_STATUS),
+                    ctx.json(makeFakeResponse({})),
                 ),
             ),
         )

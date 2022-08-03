@@ -28,6 +28,24 @@ interface Props {
 }
 
 const Content = ({isSearchApplied, reposList}: Props) => {
+    const renderWithBox = (el: JSX.Element) => (
+        <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+                height: 50,
+                color: 'primary.dark',
+                '&:hover': {
+                    color: 'primary.main',
+                    opacity: [0.9, 0.8, 0.7],
+                },
+            }}
+        >
+            {el}
+        </Box>
+    )
+
     if (isSearchApplied && !!reposList.length) {
         return (
             <Paper>
@@ -97,45 +115,17 @@ const Content = ({isSearchApplied, reposList}: Props) => {
     }
 
     if (isSearchApplied && !reposList.length) {
-        return (
-            <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                sx={{
-                    height: 50,
-                    color: 'primary.dark',
-                    '&:hover': {
-                        color: 'primary.main',
-                        opacity: [0.9, 0.8, 0.7],
-                    },
-                }}
-            >
-                <Typography component="label">
-                    Your search has no results
-                </Typography>
-            </Box>
+        return renderWithBox(
+            <Typography component="label">
+                Your search has no results
+            </Typography>,
         )
     }
 
-    return (
-        <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-                height: 50,
-                color: 'primary.dark',
-                '&:hover': {
-                    color: 'primary.main',
-                    opacity: [0.9, 0.8, 0.7],
-                },
-            }}
-        >
-            <Typography component="label">
-                Please provide a search option and click in the search button
-            </Typography>
-        </Box>
+    return renderWithBox(
+        <Typography component="label">
+            Please provide a search option and click in the search button
+        </Typography>,
     )
 }
 
