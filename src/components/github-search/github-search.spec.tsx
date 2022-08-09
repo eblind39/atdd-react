@@ -10,7 +10,11 @@ import GithubSearch from './github-search'
 import {rest} from 'msw'
 import {setupServer} from 'msw/node'
 import {HTTPStatusCodes} from '../../types/HttpCodes'
-import {makeFakeResponse, makeFakeRepo} from '../../__fixtures__/gitrepo'
+import {
+    makeFakeResponse,
+    makeFakeRepo,
+    getReposListBy,
+} from '../../__fixtures__/gitrepo'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 
 const fakeResponse: FullDataRepo = makeFakeResponse({totalCount: 1})
@@ -190,5 +194,39 @@ describe('when the GithubSearchPage is mounted', () => {
         )
 
         expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    })
+    it('if types "laravel" in filter by repo name and clicks on search, the app should return repos with the "laravel" word associated', async () => {
+        const internalFakeResponse = makeFakeResponse()
+        const REPO_NAME: string = 'laravel'
+        const expectedRepo = getReposListBy(REPO_NAME)[0]
+
+        server.use(
+            rest.get('/search/repositories', (req, res, ctx) =>
+                res(
+                    ctx.status(HTTPStatusCodes.OK_STATUS),
+                    ctx.json({
+                        ...internalFakeResponse,
+                        items: getReposListBy(
+                            req.url.searchParams.get('q') ?? 'go',
+                        ),
+                    }),
+                ),
+            ),
+        )
+
+        fireEvent.change(screen.getByLabelText(/filter by/i), {
+            target: {value: REPO_NAME},
+        })
+
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        const table = await screen.findByRole('table')
+        expect(table).toBeInTheDocument()
+
+        const tableCells = within(table).getAllByRole('cell')
+        const [repository] = tableCells
+
+        expect(repository).toHaveTextContent(expectedRepo.name)
     })
 })

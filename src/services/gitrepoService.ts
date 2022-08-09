@@ -1,6 +1,12 @@
 import {gitRepoBaseUrl} from '../app/config'
 
-const getRepos = () =>
-    fetch(`/search/repositories?q=react+language:python&page=2&per_page=50`)
+interface Params {
+    q: string
+}
+
+const getRepos = ({q}: Params) =>
+    fetch(
+        `/search/repositories?q=${q}&page=2&per_page=50`, // https://api.github.com
+    )
 
 export {getRepos}

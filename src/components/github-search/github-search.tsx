@@ -14,16 +14,23 @@ const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
     const [reposList, setReposList] = useState<RepoRoot[]>([])
+    const [searchBy, setSearchBy] = useState<string>('')
 
     const handleClick = async (evt: SyntheticEvent) => {
-        console.log(gitRepoBaseUrl)
+        // console.log(gitRepoBaseUrl)
         setIsSearching(true)
-        const response = await getRepos()
+        const response = await getRepos({q: searchBy})
         const data: FullDataRepo = await response.json()
-        console.log(data)
+        // console.log(data)
         setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
+    }
+
+    const handleChange = (evt: SyntheticEvent) => {
+        const target = evt.target as HTMLInputElement
+        const {value} = target
+        setSearchBy(value)
     }
 
     return (
@@ -39,6 +46,8 @@ const GithubSearch = () => {
                             label="Filter by"
                             id="filter"
                             name="filter"
+                            value={searchBy}
+                            onChange={handleChange}
                             fullWidth
                         />
                     </Grid>

@@ -1,14 +1,17 @@
 import {FullDataRepo, RepoRoot} from '../types/githubrepo'
 
-const makeFakeResponse = ({totalCount = 0}): FullDataRepo => ({
+const makeFakeResponse = ({totalCount = 0} = {}): FullDataRepo => ({
     total_count: totalCount,
     incomplete_results: false,
     items: [],
 })
 
-const makeFakeRepo = (): RepoRoot => ({
-    id: 5383731,
-    name: 'qemu',
+const makeFakeRepo = ({
+    name = 'django-rest-framework-reactive',
+    id = 56757919,
+} = {}): RepoRoot => ({
+    id,
+    name,
     html_url: 'https://github.com/qemu/qemu',
     updated_at: '2022-08-02',
     stargazers_count: 6490,
@@ -113,4 +116,12 @@ const makeFakeRepo = (): RepoRoot => ({
     },
 })
 
-export {makeFakeResponse, makeFakeRepo}
+const reposData: string[] = ['go', 'freeCodeCamp', 'laravel', 'Python', 'Java']
+const repoList = reposData.map(name =>
+    makeFakeRepo({name, id: name.charCodeAt(0)}),
+)
+
+const getReposListBy = (name: string) =>
+    repoList.filter(repo => repo.name === name)
+
+export {makeFakeResponse, makeFakeRepo, getReposListBy}
