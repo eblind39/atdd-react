@@ -24,30 +24,35 @@ const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
     const [reposList, setReposList] = useState<RepoRoot[]>([])
-    const [searchBy, setSearchBy] = useState<string>('')
+    // const [searchBy, setSearchBy] = useState<string>('')
     const [rowsPerPage, setRowsPerPage] = useState<number>(
         ROWS_PER_PAGE_DEFAULT,
     )
 
-    const didMount = useRef(false)
+    const didMount = useRef<boolean>(false)
+    const searchByInput = useRef<HTMLInputElement>(null)
 
     const handleSearch = useCallback(async () => {
         // console.log(gitRepoBaseUrl)
-        // if (searchBy === '') return
+        let strSrchBy = searchByInput.current?.value || ''
+        // if (strSrchBy === '') return
         setIsSearching(true)
-        const response = await getRepos({q: searchBy, rowsPerPage})
+        const response = await getRepos({
+            q: strSrchBy,
+            rowsPerPage,
+        })
         const data: FullDataRepo = await response.json()
         // console.log(data)
         setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
-    }, [rowsPerPage, searchBy])
+    }, [rowsPerPage])
 
-    const handleChange = (evt: SyntheticEvent) => {
-        const target = evt.target as HTMLInputElement
-        const {value} = target
-        setSearchBy(value)
-    }
+    // const handleChange = (evt: SyntheticEvent) => {
+    //     const target = evt.target as HTMLInputElement
+    //     const {value} = target
+    //     setSearchBy(value)
+    // }
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -77,8 +82,7 @@ const GithubSearch = () => {
                             label="Filter by"
                             id="filter"
                             name="filter"
-                            value={searchBy}
-                            onChange={handleChange}
+                            inputRef={searchByInput}
                             fullWidth
                         />
                     </Grid>
@@ -111,9 +115,6 @@ const GithubSearch = () => {
                         />
                     </React.Fragment>
                 </Content>
-                {/* reposList={reposList}
-                rowsPerPage={rowsPerPage}
-                setRowsPerPage={setRowsPerPage} */}
             </Container>
         </React.Fragment>
     )

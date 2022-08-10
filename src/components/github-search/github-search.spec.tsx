@@ -222,6 +222,14 @@ describe('when the GithubSearchPage is mounted', () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
 
+        await waitFor(
+            () =>
+                expect(
+                    screen.getByRole('button', {name: /search/i}),
+                ).toBeDisabled(),
+            {timeout: 3000},
+        )
+
         const table = await screen.findByRole('table')
         expect(table).toBeInTheDocument()
 
