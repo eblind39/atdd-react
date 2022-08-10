@@ -14,8 +14,8 @@ import {
     makeFakeResponse,
     makeFakeRepo,
     getReposListBy,
-    getReposPerPage,
 } from '../../__fixtures__/gitrepo'
+import {handlePaginated} from '../../__fixtures__/handlers'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 
 const fakeResponse: FullDataRepo = makeFakeResponse({totalCount: 1})
@@ -232,25 +232,7 @@ describe('when the GithubSearchPage is mounted', () => {
     })
     it(`when the developer clicks on search button and then selects 50 per page value, 
         the app should show 50 repositories on the table`, async () => {
-        server.use(
-            rest.get('/search/repositories', (req, res, ctx) => {
-                let per_page = Number(
-                    req.url.searchParams.get('per_page') ?? 30,
-                )
-                let page = Number(req.url.searchParams.get('page') ?? 1)
-
-                return res(
-                    ctx.status(HTTPStatusCodes.OK_STATUS),
-                    ctx.json({
-                        ...makeFakeResponse(),
-                        items: getReposPerPage({
-                            perPage: per_page,
-                            currentPage: page,
-                        }),
-                    }),
-                )
-            }),
-        )
+        server.use(rest.get('/search/repositories', handlePaginated))
 
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
@@ -261,11 +243,13 @@ describe('when the GithubSearchPage is mounted', () => {
         fireEvent.mouseDown(screen.getByLabelText(/rows per page/i))
         fireEvent.click(screen.getByRole('option', {name: '50'}))
 
-        await waitFor(() =>
-            expect(
-                screen.getByRole('button', {name: /search/i}),
-            ).not.toBeDisabled(),
+        await waitFor(
+            () =>
+                expect(
+                    screen.getByRole('button', {name: /search/i}),
+                ).not.toBeDisabled(),
+            {timeout: 3000},
         )
         expect(await screen.getAllByRole('row')).toHaveLength(50 + 1) // 50 + header row
-    })
+    }, 6000)
 })

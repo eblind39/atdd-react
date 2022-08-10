@@ -11,22 +11,29 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
+import TablePagination from '@mui/material/TablePagination'
 import Content from './github-search-cont'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 import {getRepos} from '../../services/gitrepoService'
+import GithubTable from './github-table'
 import {gitRepoBaseUrl} from '../../app/config'
+
+const ROWS_PER_PAGE_DEFAULT = 30
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
     const [reposList, setReposList] = useState<RepoRoot[]>([])
     const [searchBy, setSearchBy] = useState<string>('')
-    const [rowsPerPage, setRowsPerPage] = useState<number>(30)
+    const [rowsPerPage, setRowsPerPage] = useState<number>(
+        ROWS_PER_PAGE_DEFAULT,
+    )
 
     const didMount = useRef(false)
 
     const handleSearch = useCallback(async () => {
         // console.log(gitRepoBaseUrl)
+        // if (searchBy === '') return
         setIsSearching(true)
         const response = await getRepos({q: searchBy, rowsPerPage})
         const data: FullDataRepo = await response.json()
@@ -40,6 +47,13 @@ const GithubSearch = () => {
         const target = evt.target as HTMLInputElement
         const {value} = target
         setSearchBy(value)
+    }
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        // setPage(0)
     }
 
     useEffect(() => {
@@ -81,11 +95,25 @@ const GithubSearch = () => {
                     </Grid>
                 </Grid>
                 <Content
-                    isSearchApplied={isSearchApplied}
                     reposList={reposList}
-                    rowsPerPage={rowsPerPage}
-                    setRowsPerPage={setRowsPerPage}
-                />
+                    isSearchApplied={isSearchApplied}
+                >
+                    <React.Fragment>
+                        <GithubTable reposList={reposList} />
+                        <TablePagination
+                            rowsPerPageOptions={[30, 50, 100]}
+                            component="div"
+                            count={1}
+                            rowsPerPage={rowsPerPage}
+                            page={0}
+                            onPageChange={() => {}}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </React.Fragment>
+                </Content>
+                {/* reposList={reposList}
+                rowsPerPage={rowsPerPage}
+                setRowsPerPage={setRowsPerPage} */}
             </Container>
         </React.Fragment>
     )
