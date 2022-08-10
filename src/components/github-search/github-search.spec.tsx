@@ -258,9 +258,14 @@ describe('when the GithubSearchPage is mounted', () => {
         expect(await screen.findByRole('table')).toBeInTheDocument()
         expect(await screen.findAllByRole('row')).toHaveLength(30 + 1) // 30 + header row
 
-        // fireEvent.mouseDown(screen.getByLabelText(/rows per page/i))
-        // fireEvent.click(screen.getByRole('option', {name: '50'}))
+        fireEvent.mouseDown(screen.getByLabelText(/rows per page/i))
+        fireEvent.click(screen.getByRole('option', {name: '50'}))
 
-        // expect(await screen.findAllByRole('row')).toHaveLength(50 + 1) // 50 + header row
+        await waitFor(() =>
+            expect(
+                screen.getByRole('button', {name: /search/i}),
+            ).not.toBeDisabled(),
+        )
+        expect(await screen.getAllByRole('row')).toHaveLength(50 + 1) // 50 + header row
     })
 })

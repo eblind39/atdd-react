@@ -1,4 +1,10 @@
-import React, {SyntheticEvent, useState} from 'react'
+import React, {
+    SyntheticEvent,
+    useState,
+    useEffect,
+    useCallback,
+    useRef,
+} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -17,8 +23,10 @@ const GithubSearch = () => {
     const [searchBy, setSearchBy] = useState<string>('')
     const [rowsPerPage, setRowsPerPage] = useState<number>(30)
 
-    const handleClick = async (evt: SyntheticEvent) => {
-        console.log(gitRepoBaseUrl)
+    const didMount = useRef(false)
+
+    const handleSearch = useCallback(async () => {
+        // console.log(gitRepoBaseUrl)
         setIsSearching(true)
         const response = await getRepos({q: searchBy, rowsPerPage})
         const data: FullDataRepo = await response.json()
@@ -26,13 +34,21 @@ const GithubSearch = () => {
         setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
-    }
+    }, [rowsPerPage, searchBy])
 
     const handleChange = (evt: SyntheticEvent) => {
         const target = evt.target as HTMLInputElement
         const {value} = target
         setSearchBy(value)
     }
+
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true
+            return
+        }
+        handleSearch()
+    }, [handleSearch, rowsPerPage])
 
     return (
         <React.Fragment>
@@ -58,7 +74,7 @@ const GithubSearch = () => {
                             variant="contained"
                             disabled={isSearching}
                             fullWidth
-                            onClick={handleClick}
+                            onClick={handleSearch}
                         >
                             Search
                         </Button>
