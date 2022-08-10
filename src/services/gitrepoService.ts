@@ -2,11 +2,12 @@ import {gitRepoBaseUrl} from '../app/config'
 
 interface Params {
     q: string
+    rowsPerPage: number
 }
 
-const getRepos = ({q}: Params) =>
+const getRepos = ({q, rowsPerPage}: Params) =>
     fetch(
-        `/search/repositories?q=${q}&page=2&per_page=50`, // https://api.github.com
+        `/search/repositories?q=${q}&page=1&per_page=${rowsPerPage}`, // https://api.github.com
     )
 
 export {getRepos}

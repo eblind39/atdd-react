@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
@@ -24,9 +24,23 @@ const tableHeaders = [
 interface Props {
     isSearchApplied: boolean
     reposList: RepoRoot[]
+    rowsPerPage: number
+    setRowsPerPage: Dispatch<SetStateAction<number>>
 }
 
-const Content = ({isSearchApplied, reposList}: Props) => {
+const Content = ({
+    isSearchApplied,
+    reposList,
+    rowsPerPage,
+    setRowsPerPage,
+}: Props) => {
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        // setPage(0)
+    }
+
     const renderWithBox = (el: JSX.Element) => (
         <Box
             display="flex"
@@ -104,10 +118,10 @@ const Content = ({isSearchApplied, reposList}: Props) => {
                     rowsPerPageOptions={[30, 50, 100]}
                     component="div"
                     count={1}
-                    rowsPerPage={30}
+                    rowsPerPage={rowsPerPage}
                     page={0}
                     onPageChange={() => {}}
-                    onRowsPerPageChange={() => {}}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
         )

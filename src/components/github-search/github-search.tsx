@@ -15,11 +15,12 @@ const GithubSearch = () => {
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
     const [reposList, setReposList] = useState<RepoRoot[]>([])
     const [searchBy, setSearchBy] = useState<string>('')
+    const [rowsPerPage, setRowsPerPage] = useState<number>(30)
 
     const handleClick = async (evt: SyntheticEvent) => {
-        // console.log(gitRepoBaseUrl)
+        console.log(gitRepoBaseUrl)
         setIsSearching(true)
-        const response = await getRepos({q: searchBy})
+        const response = await getRepos({q: searchBy, rowsPerPage})
         const data: FullDataRepo = await response.json()
         // console.log(data)
         setReposList(data.items)
@@ -66,6 +67,8 @@ const GithubSearch = () => {
                 <Content
                     isSearchApplied={isSearchApplied}
                     reposList={reposList}
+                    rowsPerPage={rowsPerPage}
+                    setRowsPerPage={setRowsPerPage}
                 />
             </Container>
         </React.Fragment>

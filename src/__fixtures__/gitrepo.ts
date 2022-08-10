@@ -1,4 +1,6 @@
 import {FullDataRepo, RepoRoot} from '../types/githubrepo'
+import * as repos30Paginated from './repos-30-paginated.json'
+import * as repos50Paginated from './repos-50-paginated.json'
 
 const makeFakeResponse = ({totalCount = 0} = {}): FullDataRepo => ({
     total_count: totalCount,
@@ -116,12 +118,27 @@ const makeFakeRepo = ({
     },
 })
 
+interface ReposPerPageProps {
+    currentPage: number
+    perPage: number
+}
+
+interface ReposListByProps {
+    name: string
+}
+
 const reposData: string[] = ['go', 'freeCodeCamp', 'laravel', 'Python', 'Java']
 const repoList = reposData.map(name =>
     makeFakeRepo({name, id: name.charCodeAt(0)}),
 )
 
-const getReposListBy = (name: string) =>
+const getReposListBy = ({name}: ReposListByProps) =>
     repoList.filter(repo => repo.name === name)
 
-export {makeFakeResponse, makeFakeRepo, getReposListBy}
+const getReposPerPage = ({currentPage, perPage}: ReposPerPageProps) => {
+    return perPage === 30
+        ? repos30Paginated[currentPage]
+        : repos50Paginated[currentPage]
+}
+
+export {makeFakeResponse, makeFakeRepo, getReposListBy, getReposPerPage}

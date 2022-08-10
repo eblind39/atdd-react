@@ -14,6 +14,7 @@ import {
     makeFakeResponse,
     makeFakeRepo,
     getReposListBy,
+    getReposPerPage,
 } from '../../__fixtures__/gitrepo'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 
@@ -198,7 +199,7 @@ describe('when the GithubSearchPage is mounted', () => {
     it('if types "laravel" in filter by repo name and clicks on search, the app should return repos with the "laravel" word associated', async () => {
         const internalFakeResponse = makeFakeResponse()
         const REPO_NAME: string = 'laravel'
-        const expectedRepo = getReposListBy(REPO_NAME)[0]
+        const expectedRepo = getReposListBy({name: REPO_NAME})[0]
 
         server.use(
             rest.get('/search/repositories', (req, res, ctx) =>
@@ -206,9 +207,9 @@ describe('when the GithubSearchPage is mounted', () => {
                     ctx.status(HTTPStatusCodes.OK_STATUS),
                     ctx.json({
                         ...internalFakeResponse,
-                        items: getReposListBy(
-                            req.url.searchParams.get('q') ?? 'go',
-                        ),
+                        items: getReposListBy({
+                            name: req.url.searchParams.get('q') ?? 'go',
+                        }),
                     }),
                 ),
             ),
@@ -228,5 +229,38 @@ describe('when the GithubSearchPage is mounted', () => {
         const [repository] = tableCells
 
         expect(repository).toHaveTextContent(expectedRepo.name)
+    })
+    it(`when the developer clicks on search button and then selects 50 per page value, 
+        the app should show 50 repositories on the table`, async () => {
+        server.use(
+            rest.get('/search/repositories', (req, res, ctx) => {
+                let per_page = Number(
+                    req.url.searchParams.get('per_page') ?? 30,
+                )
+                let page = Number(req.url.searchParams.get('page') ?? 1)
+
+                return res(
+                    ctx.status(HTTPStatusCodes.OK_STATUS),
+                    ctx.json({
+                        ...makeFakeResponse(),
+                        items: getReposPerPage({
+                            perPage: per_page,
+                            currentPage: page,
+                        }),
+                    }),
+                )
+            }),
+        )
+
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        expect(await screen.findByRole('table')).toBeInTheDocument()
+        expect(await screen.findAllByRole('row')).toHaveLength(30 + 1) // 30 + header row
+
+        // fireEvent.mouseDown(screen.getByLabelText(/rows per page/i))
+        // fireEvent.click(screen.getByRole('option', {name: '50'}))
+
+        // expect(await screen.findAllByRole('row')).toHaveLength(50 + 1) // 50 + header row
     })
 })
