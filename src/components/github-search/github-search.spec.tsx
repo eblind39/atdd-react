@@ -137,7 +137,7 @@ describe('when the GithubSearchPage is mounted', () => {
         fireEvent.click(btnSearch)
 
         await screen.findByRole('table')
-        expect(screen.getByText(/1–1 of 1/i)).toBeInTheDocument()
+        expect(screen.getByText(/1–30 of 1000/i)).toBeInTheDocument()
     })
     it('results size per page select/combobox with the options: 30, 50, 100. The default is 30', async () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
@@ -222,14 +222,6 @@ describe('when the GithubSearchPage is mounted', () => {
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
 
-        await waitFor(
-            () =>
-                expect(
-                    screen.getByRole('button', {name: /search/i}),
-                ).toBeDisabled(),
-            {timeout: 3000},
-        )
-
         const table = await screen.findByRole('table')
         expect(table).toBeInTheDocument()
 
@@ -260,4 +252,33 @@ describe('when the GithubSearchPage is mounted', () => {
         )
         expect(await screen.getAllByRole('row')).toHaveLength(50 + 1) // 50 + header row
     }, 6000)
+    it(`when the developer clicks on search and then on next page button and then
+        on next button, the app should show the next repositories`, async () => {
+        server.use(rest.get('/search/repositories', handlePaginated))
+
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        expect(await screen.findByRole('table')).toBeInTheDocument()
+
+        expect(screen.getByRole('cell', {name: /1-0/})).toBeInTheDocument()
+
+        expect(
+            screen.getByRole('button', {name: /next page/i}),
+        ).not.toBeDisabled()
+
+        fireEvent.click(screen.getByRole('button', {name: /next page/i}))
+
+        expect(screen.getByRole('button', {name: /search/i})).toBeDisabled()
+
+        await waitFor(
+            () =>
+                expect(
+                    screen.getByRole('button', {name: /search/i}),
+                ).not.toBeDisabled(),
+            {timeout: 3000},
+        )
+
+        expect(screen.getByRole('cell', {name: /2-0/})).toBeInTheDocument()
+    })
 })

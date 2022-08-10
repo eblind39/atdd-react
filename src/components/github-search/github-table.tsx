@@ -22,8 +22,8 @@ interface Props {
 }
 
 const GithubTable = ({reposList}: Props) => (
-    <TableContainer>
-        <Table sx={{minWidth: 500}} aria-label="custom pagination table">
+    <TableContainer sx={{maxHeight: 440}}>
+        <Table stickyHeader sx={{minWidth: 500}} aria-label="Github table">
             <TableHead>
                 <TableRow>
                     {tableHeaders.map(name => (

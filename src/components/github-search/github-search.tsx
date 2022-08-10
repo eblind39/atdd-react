@@ -24,10 +24,10 @@ const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [isSearchApplied, setIsSearchApplied] = useState<boolean>(false)
     const [reposList, setReposList] = useState<RepoRoot[]>([])
-    // const [searchBy, setSearchBy] = useState<string>('')
     const [rowsPerPage, setRowsPerPage] = useState<number>(
         ROWS_PER_PAGE_DEFAULT,
     )
+    const [currentPage, setCurrentPage] = useState<number>(0)
 
     const didMount = useRef<boolean>(false)
     const searchByInput = useRef<HTMLInputElement>(null)
@@ -40,25 +40,24 @@ const GithubSearch = () => {
         const response = await getRepos({
             q: strSrchBy,
             rowsPerPage,
+            currentPage,
         })
         const data: FullDataRepo = await response.json()
         // console.log(data)
         setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
-    }, [rowsPerPage])
-
-    // const handleChange = (evt: SyntheticEvent) => {
-    //     const target = evt.target as HTMLInputElement
-    //     const {value} = target
-    //     setSearchBy(value)
-    // }
+    }, [rowsPerPage, currentPage])
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
         setRowsPerPage(parseInt(event.target.value, 10))
-        // setPage(0)
+        setCurrentPage(0)
+    }
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setCurrentPage(newPage)
     }
 
     useEffect(() => {
@@ -107,10 +106,10 @@ const GithubSearch = () => {
                         <TablePagination
                             rowsPerPageOptions={[30, 50, 100]}
                             component="div"
-                            count={1}
+                            count={1000}
                             rowsPerPage={rowsPerPage}
-                            page={0}
-                            onPageChange={() => {}}
+                            page={currentPage}
+                            onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </React.Fragment>
