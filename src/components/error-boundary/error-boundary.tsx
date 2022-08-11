@@ -1,4 +1,6 @@
 import React from 'react'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
 interface Props {
     children: JSX.Element
@@ -25,10 +27,17 @@ export class ErrorBoundary extends React.Component<Props, State> {
         if (hasError) {
             return (
                 <React.Fragment>
-                    <p>There is an unexpected error</p>
-                    <button type="button" onClick={this.handleReloadClick}>
+                    <Typography variant="h4" component="h4">
+                        There is an unexpected error
+                    </Typography>
+                    <Button
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleReloadClick}
+                    >
                         Reload
-                    </button>
+                    </Button>
                 </React.Fragment>
             )
         }

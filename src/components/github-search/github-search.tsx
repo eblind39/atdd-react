@@ -31,7 +31,7 @@ const GithubSearch = () => {
     const handleSearch = useCallback(async () => {
         // console.log(gitRepoBaseUrl)
         let strSrchBy = searchByInput.current?.value || ''
-        // if (strSrchBy === '') return
+        if (strSrchBy === '') return
         setIsSearching(true)
         const response = await getRepos({
             q: strSrchBy,
