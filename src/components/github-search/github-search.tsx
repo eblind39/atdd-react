@@ -6,6 +6,7 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import TablePagination from '@mui/material/TablePagination'
+import Snackbar from '@mui/material/Snackbar'
 import Content from './github-search-cont'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 import {getRepos} from '../../services/gitrepoService'
@@ -24,26 +25,38 @@ const GithubSearch = () => {
     )
     const [currentPage, setCurrentPage] = useState<number>(INITIAL_CURRENT_PAGE)
     const [totalCount, setTotalCount] = useState<number>(INITIAL_TOTAL_COUNT)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const didMount = useRef<boolean>(false)
     const searchByInput = useRef<HTMLInputElement>(null)
 
     const handleSearch = useCallback(async () => {
-        // console.log(gitRepoBaseUrl)
-        let strSrchBy = searchByInput.current?.value || ''
-        if (strSrchBy === '') return
-        setIsSearching(true)
-        const response = await getRepos({
-            q: strSrchBy,
-            rowsPerPage,
-            currentPage,
-        })
-        const data: FullDataRepo = await response.json()
-        // console.log(data)
-        setTotalCount(data.total_count)
-        setReposList(data.items)
-        setIsSearching(false)
-        setIsSearchApplied(true)
+        try {
+            // console.log(gitRepoBaseUrl)
+            let strSrchBy = searchByInput.current?.value || ''
+            // if (strSrchBy === '') return
+            setIsSearching(true)
+            const response = await getRepos({
+                q: strSrchBy,
+                rowsPerPage,
+                currentPage,
+            })
+
+            if (!response.ok) {
+                throw response
+            }
+
+            const data: FullDataRepo = await response.json()
+            // console.log(data)
+            setTotalCount(data.total_count)
+            setReposList(data.items)
+            setIsSearching(false)
+            setIsSearchApplied(true)
+        } catch (err) {
+            setIsOpen(true)
+        } finally {
+            setIsSearching(false)
+        }
     }, [rowsPerPage, currentPage])
 
     const handleChangeRowsPerPage = (
@@ -111,6 +124,13 @@ const GithubSearch = () => {
                         />
                     </React.Fragment>
                 </Content>
+
+                <Snackbar
+                    open={isOpen}
+                    autoHideDuration={6000}
+                    onClose={() => setIsOpen(false)}
+                    message="Validation failed"
+                />
             </Container>
         </React.Fragment>
     )

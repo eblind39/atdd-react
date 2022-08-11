@@ -141,4 +141,15 @@ const getReposPerPage = ({currentPage, perPage}: ReposPerPageProps) => {
         : repos50Paginated[currentPage]
 }
 
-export {makeFakeResponse, makeFakeRepo, getReposListBy, getReposPerPage}
+const makeFakeError = () => ({
+    // errors: [{resource: 'Search', field: '0', code: 'missing'}],
+    message: 'Validation failed',
+})
+
+export {
+    makeFakeResponse,
+    makeFakeRepo,
+    getReposListBy,
+    getReposPerPage,
+    makeFakeError,
+}

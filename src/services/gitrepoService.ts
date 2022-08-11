@@ -8,7 +8,7 @@ interface Params {
 
 const getRepos = ({q, rowsPerPage, currentPage}: Params) =>
     fetch(
-        `https://api.github.com/search/repositories?q=${q}&page=${currentPage}&per_page=${rowsPerPage}`, //
+        `/search/repositories?q=${q}&page=${currentPage}&per_page=${rowsPerPage}`, // https://api.github.com
     )
 
 export {getRepos}
