@@ -280,5 +280,17 @@ describe('when the GithubSearchPage is mounted', () => {
         )
 
         expect(screen.getByRole('cell', {name: /2-0/})).toBeInTheDocument()
-    })
+
+        fireEvent.click(screen.getByRole('button', {name: /previous page/i}))
+
+        await waitFor(
+            () =>
+                expect(
+                    screen.getByRole('button', {name: /search/i}),
+                ).not.toBeDisabled(),
+            {timeout: 3000},
+        )
+
+        expect(screen.getByRole('cell', {name: /1-0/})).toBeInTheDocument()
+    }, 7000)
 })
