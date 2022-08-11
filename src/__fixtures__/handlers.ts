@@ -8,7 +8,7 @@ const handlePaginated = (req: any, res: any, ctx: any) => {
     return res(
         ctx.status(HTTPStatusCodes.OK_STATUS),
         ctx.json({
-            ...makeFakeResponse(),
+            ...makeFakeResponse({totalCount: 1000}),
             items: getReposPerPage({
                 perPage: per_page,
                 currentPage: page,

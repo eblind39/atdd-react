@@ -1,10 +1,4 @@
-import React, {
-    SyntheticEvent,
-    useState,
-    useEffect,
-    useCallback,
-    useRef,
-} from 'react'
+import React, {useState, useEffect, useCallback, useRef} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -16,9 +10,10 @@ import Content from './github-search-cont'
 import {FullDataRepo, RepoRoot} from '../../types/githubrepo'
 import {getRepos} from '../../services/gitrepoService'
 import GithubTable from './github-table'
-import {gitRepoBaseUrl} from '../../app/config'
 
 const ROWS_PER_PAGE_DEFAULT = 30
+const INITIAL_CURRENT_PAGE = 0
+const INITIAL_TOTAL_COUNT = 0
 
 const GithubSearch = () => {
     const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -27,7 +22,8 @@ const GithubSearch = () => {
     const [rowsPerPage, setRowsPerPage] = useState<number>(
         ROWS_PER_PAGE_DEFAULT,
     )
-    const [currentPage, setCurrentPage] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(INITIAL_CURRENT_PAGE)
+    const [totalCount, setTotalCount] = useState<number>(INITIAL_TOTAL_COUNT)
 
     const didMount = useRef<boolean>(false)
     const searchByInput = useRef<HTMLInputElement>(null)
@@ -44,6 +40,7 @@ const GithubSearch = () => {
         })
         const data: FullDataRepo = await response.json()
         // console.log(data)
+        setTotalCount(data.total_count)
         setReposList(data.items)
         setIsSearching(false)
         setIsSearchApplied(true)
@@ -106,7 +103,7 @@ const GithubSearch = () => {
                         <TablePagination
                             rowsPerPageOptions={[30, 50, 100]}
                             component="div"
-                            count={1000}
+                            count={totalCount}
                             rowsPerPage={rowsPerPage}
                             page={currentPage}
                             onPageChange={handleChangePage}

@@ -1,16 +1,7 @@
-import React, {
-    Dispatch,
-    ReactChild,
-    ReactFragment,
-    ReactPortal,
-    SetStateAction,
-} from 'react'
+import React from 'react'
 import Typography from '@mui/material/Typography'
-import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
-import TablePagination from '@mui/material/TablePagination'
 import {RepoRoot} from '../../types/githubrepo'
-import GithubTable from './github-table'
 
 interface Props {
     isSearchApplied: boolean
