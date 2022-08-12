@@ -26,6 +26,7 @@ const GithubSearch = () => {
     const [currentPage, setCurrentPage] = useState<number>(INITIAL_CURRENT_PAGE)
     const [totalCount, setTotalCount] = useState<number>(INITIAL_TOTAL_COUNT)
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     const didMount = useRef<boolean>(false)
     const searchByInput = useRef<HTMLInputElement>(null)
@@ -47,12 +48,17 @@ const GithubSearch = () => {
             }
 
             const data: FullDataRepo = await response.json()
-            // console.log(data)
+
             setTotalCount(data.total_count)
             setReposList(data.items)
             setIsSearching(false)
             setIsSearchApplied(true)
-        } catch (err) {
+        } catch (err: unknown) {
+            if (err instanceof Response) {
+                const data = await err.json()
+                if (data.hasOwnProperty('message'))
+                    setErrorMessage(data.message)
+            }
             setIsOpen(true)
         } finally {
             setIsSearching(false)
@@ -129,7 +135,7 @@ const GithubSearch = () => {
                     open={isOpen}
                     autoHideDuration={6000}
                     onClose={() => setIsOpen(false)}
-                    message="Validation failed"
+                    message={errorMessage}
                 />
             </Container>
         </React.Fragment>

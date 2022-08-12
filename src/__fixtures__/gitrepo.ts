@@ -127,6 +127,10 @@ interface ReposListByProps {
     name: string
 }
 
+interface MakeFakeErrorProps {
+    message: string
+}
+
 const reposData: string[] = ['go', 'freeCodeCamp', 'laravel', 'Python', 'Java']
 const repoList = reposData.map(name =>
     makeFakeRepo({name, id: name.charCodeAt(0)}),
@@ -141,9 +145,11 @@ const getReposPerPage = ({currentPage, perPage}: ReposPerPageProps) => {
         : repos50Paginated[currentPage]
 }
 
-const makeFakeError = () => ({
+const makeFakeError = ({
+    message = 'Validation failed',
+}: MakeFakeErrorProps) => ({
     // errors: [{resource: 'Search', field: '0', code: 'missing'}],
-    message: 'Validation failed',
+    message,
 })
 
 export {

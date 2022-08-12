@@ -294,21 +294,34 @@ describe('when the GithubSearchPage is mounted', () => {
 
         expect(screen.getByRole('cell', {name: /1-0/})).toBeInTheDocument()
     }, 7000)
-    it(`If there is an unexpected error from the backend, the app should display
-    an alert message error with the message from the service if any, if not
-    show the generic “there is an unexpected error”`, async () => {
+    it(`If there is an unexpected error from the backend, error 422 “there is an unexpected error”`, async () => {
         server.use(
             rest.get('/search/repositories', (req, res, ctx) =>
-                res(ctx.status(422), ctx.json(makeFakeError())),
+                res(
+                    ctx.status(HTTPStatusCodes.UNPROCESSABLE_ENTITY),
+                    ctx.json(makeFakeError({message: 'Unprocessable Entity'})),
+                ),
             ),
         )
 
         const btnSearch = screen.getByRole('button', {name: /search/i})
         fireEvent.click(btnSearch)
 
-        expect(
-            // await screen.findByRole('alert', {name: /validation failed/i}),
-            await screen.findByText(/validation failed/i),
-        ).toBeVisible()
+        expect(await screen.findByText(/unprocessable entity/i)).toBeVisible()
+    })
+    it(`If there is an unexpected error from the backend, error 500 “there is an unexpected error”`, async () => {
+        server.use(
+            rest.get('/search/repositories', (req, res, ctx) =>
+                res(
+                    ctx.status(HTTPStatusCodes.INTERNAL_SERVER_ERROR),
+                    ctx.json(makeFakeError({message: 'Internal server error'})),
+                ),
+            ),
+        )
+
+        const btnSearch = screen.getByRole('button', {name: /search/i})
+        fireEvent.click(btnSearch)
+
+        expect(await screen.findByText(/internal server error/i)).toBeVisible()
     })
 })
