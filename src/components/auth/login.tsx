@@ -8,10 +8,19 @@ interface FormValues {
 }
 
 const validEmail = (email: string): boolean => {
+    const validEmailFormat: RegExpMatchArray | null = String(email).match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    )
+
+    return !!validEmailFormat
+}
+
+const validPassword = (password: string): boolean => {
+    if (password.length < 8) return false
     const validPWGuidelinesRequirements: RegExpMatchArray | null = String(
-        email,
+        password,
     ).match(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=,~;:\\\'\""<>\\_\-`\.\[\]{}|/\*\(\)\?]).*$/,
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     )
 
     return !!validPWGuidelinesRequirements
@@ -53,10 +62,17 @@ const Login = () => {
     const handleBlurEmail = (evt: SyntheticEvent) => {
         if (!validEmail(formValues.email))
             setEmailValMsg(
-                `The email is invalid. Example: john.doe@domain.com.
-                 Password must have 1 capital letter, 1 lowercase letter, and 1 special character.`,
+                `The email is invalid. Example: john.doe@domain.com.`,
             )
         else setEmailValMsg('')
+    }
+
+    const handleBlurPassword = (evt: SyntheticEvent) => {
+        if (!validPassword(formValues.password))
+            setPasswordValMsg(
+                `The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character`,
+            )
+        else setPasswordValMsg('')
     }
 
     return (
@@ -78,6 +94,9 @@ const Login = () => {
                     name="password"
                     type="password"
                     helperText={passwordValMsg}
+                    onChange={handleChange}
+                    onBlur={handleBlurPassword}
+                    value={formValues.password}
                 ></TextField>
                 <Button type="submit">Send</Button>
             </form>
