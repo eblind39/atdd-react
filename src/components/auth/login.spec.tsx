@@ -87,9 +87,10 @@ describe('when the user fills and blur the email input with valid email', () => 
 
 describe('when the user fills and blur the password input with a value with 7 characters length', () => {
     it('must display the validation message: "The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character"', () => {
+        const pwSevenLength = '1234567'
         const passwordInput = screen.getByLabelText(/password/i)
         fireEvent.change(passwordInput, {
-            target: {value: '1234567'},
+            target: {value: pwSevenLength},
         })
         fireEvent.blur(passwordInput)
 
@@ -99,9 +100,10 @@ describe('when the user fills and blur the password input with a value with 7 ch
 
 describe('when the user fills and blur the password input with a value without one uppercase character', () => {
     it('must display the validation message: "The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character"', () => {
+        const pwWithoutUppercase = 'ernestogut1234#'
         const passwordInput = screen.getByLabelText(/password/i)
         fireEvent.change(passwordInput, {
-            target: {value: 'ernestogut1234'},
+            target: {value: pwWithoutUppercase},
         })
         fireEvent.blur(passwordInput)
 
@@ -111,9 +113,10 @@ describe('when the user fills and blur the password input with a value without o
 
 describe('when the user fills and blur the password input with a value without a number', () => {
     it('must display the validation message: "The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character"', () => {
+        const pwWithoutANumber = 'ernestogut#'
         const passwordInput = screen.getByLabelText(/password/i)
         fireEvent.change(passwordInput, {
-            target: {value: 'Ernestogut'},
+            target: {value: pwWithoutANumber},
         })
         fireEvent.blur(passwordInput)
 
@@ -123,12 +126,26 @@ describe('when the user fills and blur the password input with a value without a
 
 describe('when the user fills and blur the password input with a value without a special character', () => {
     it('must display the validation message: "The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character"', () => {
+        const pwWithoutSpecialChar = 'ernestogut12345'
         const passwordInput = screen.getByLabelText(/password/i)
         fireEvent.change(passwordInput, {
-            target: {value: 'Ernestogut12345'},
+            target: {value: pwWithoutSpecialChar},
         })
         fireEvent.blur(passwordInput)
 
         expect(screen.getByText(pwValidationMsg)).toBeInTheDocument()
+    })
+})
+
+describe('when the user fills and blur the password input with a valid value', () => {
+    it('must not display the validation message: "The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character"', () => {
+        const pwValidValue = 'Ernestogut12345#$..'
+        const passwordInput = screen.getByLabelText(/password/i)
+        fireEvent.change(passwordInput, {
+            target: {value: pwValidValue},
+        })
+        fireEvent.blur(passwordInput)
+
+        expect(screen.queryByText(pwValidationMsg)).not.toBeInTheDocument()
     })
 })
