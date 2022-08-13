@@ -33,8 +33,9 @@ const Login = () => {
         email: '',
         password: '',
     })
+    const [isFetching, setIsFetching] = useState<boolean>(false)
 
-    const handleSubmit = (evt: SyntheticEvent) => {
+    const handleSubmit = async (evt: SyntheticEvent) => {
         evt.preventDefault()
         const target = evt.target as HTMLFormElement
         const elements = target.elements as typeof target.elements & {
@@ -49,6 +50,14 @@ const Login = () => {
 
         if (!password.value) setPasswordValMsg('The password is required')
         else setPasswordValMsg('')
+
+        setIsFetching(true)
+
+        await fetch('/login', {
+            method: 'POST',
+        })
+
+        setIsFetching(false)
     }
 
     const handleChange = (evt: SyntheticEvent) => {
@@ -98,7 +107,9 @@ const Login = () => {
                     onBlur={handleBlurPassword}
                     value={formValues.password}
                 ></TextField>
-                <Button type="submit">Send</Button>
+                <Button type="submit" disabled={isFetching}>
+                    Send
+                </Button>
             </form>
         </React.Fragment>
     )
