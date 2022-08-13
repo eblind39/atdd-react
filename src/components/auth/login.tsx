@@ -2,9 +2,28 @@ import React, {FormEvent, SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
+interface FormValues {
+    email: string
+    password: string
+}
+
+const validEmail = (email: string): boolean => {
+    const validPWGuidelinesRequirements: RegExpMatchArray | null = String(
+        email,
+    ).match(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=,~;:\\\'\""<>\\_\-`\.\[\]{}|/\*\(\)\?]).*$/,
+    )
+
+    return !!validPWGuidelinesRequirements
+}
+
 const Login = () => {
     const [emailValMsg, setEmailValMsg] = useState<string>('')
     const [passwordValMsg, setPasswordValMsg] = useState<string>('')
+    const [formValues, setFormValues] = useState<FormValues>({
+        email: '',
+        password: '',
+    })
 
     const handleSubmit = (evt: SyntheticEvent) => {
         evt.preventDefault()
@@ -23,6 +42,24 @@ const Login = () => {
         else setPasswordValMsg('')
     }
 
+    const handleChange = (evt: SyntheticEvent) => {
+        evt.preventDefault()
+        const target = evt.target as HTMLInputElement
+        const {name, value} = target
+
+        setFormValues({...formValues, [name]: value})
+    }
+
+    const handleBlurEmail = (evt: SyntheticEvent) => {
+        evt.preventDefault()
+        const target = evt.target as HTMLInputElement
+        const {value} = target
+
+        if (!validEmail(value))
+            setEmailValMsg('The email is invalid. Example: john.doe@domain.com')
+        else setEmailValMsg('')
+    }
+
     return (
         <React.Fragment>
             <h1>Login</h1>
@@ -32,6 +69,9 @@ const Login = () => {
                     id="email"
                     name="email"
                     helperText={emailValMsg}
+                    onChange={handleChange}
+                    onBlur={handleBlurEmail}
+                    value={formValues.email}
                 ></TextField>
                 <TextField
                     label="password"

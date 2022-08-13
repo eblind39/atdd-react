@@ -18,6 +18,8 @@ describe('when login page is mounted', () => {
 
 describe('when the user leaves empty fields and clicks the submit button', () => {
     it('display required messages as the format: "The [field name] is required"', () => {
+        ;(screen.getByLabelText(/email/i) as HTMLInputElement).value = ''
+        ;(screen.getByLabelText(/password/i) as HTMLInputElement).value = ''
         expect(
             screen.queryByText(/the email is required/i),
         ).not.toBeInTheDocument()
@@ -34,9 +36,9 @@ describe('when the user leaves empty fields and clicks the submit button', () =>
 
 describe('when the user fills the fields and clicks the submit button', () => {
     it('must not display the required messages', () => {
-        ;(screen.getByLabelText('email') as HTMLInputElement).value =
+        ;(screen.getByLabelText(/email/i) as HTMLInputElement).value =
             'john.doe@test.com'
-        ;(screen.getByLabelText('password') as HTMLInputElement).value =
+        ;(screen.getByLabelText(/password/i) as HTMLInputElement).value =
             'Aa123456789!@#'
         fireEvent.click(screen.getByRole('button', {name: /send/i}))
         expect(
@@ -45,5 +47,21 @@ describe('when the user fills the fields and clicks the submit button', () => {
         expect(
             screen.queryByText(/the password is required/i),
         ).not.toBeInTheDocument()
+    })
+})
+
+describe('when the user fills and blur the email input with invalid email', () => {
+    it('must display a validation message "The email is invalid. Example: john.doe@domain.com"', () => {
+        const emailInput = screen.getByLabelText('email')
+        fireEvent.change(emailInput, {
+            target: {value: 'invalid.email'},
+        })
+        fireEvent.blur(emailInput)
+
+        expect(
+            screen.getByText(
+                /the email is invalid. Example: john.doe@domain.com/i,
+            ),
+        ).toBeInTheDocument()
     })
 })
