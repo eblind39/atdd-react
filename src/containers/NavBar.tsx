@@ -14,12 +14,21 @@ import GroupIcon from '@mui/icons-material/Group'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 import ImagesearchRollerIcon from '@mui/icons-material/ImagesearchRoller'
 import ManageSearchIcon from '@mui/icons-material/ManageSearch'
+import LoginIcon from '@mui/icons-material/Login'
 import {Link} from 'react-router-dom'
 
 const NavBar: React.FC = (): JSX.Element => {
     return (
         <Paper sx={{width: 230}}>
             <MenuList>
+                <MenuItem>
+                    <ListItemIcon>
+                        <LoginIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/login">
+                        <Typography variant="inherit">Login</Typography>
+                    </Link>
+                </MenuItem>
                 <MenuItem>
                     <ListItemIcon>
                         <MenuBookIcon fontSize="small" />

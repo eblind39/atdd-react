@@ -9,11 +9,13 @@ import Form from './containers/products/Form'
 import CreativAnims from './containers/CreativAnims'
 import CreativeCSketch from './containers/CreativeCSketch'
 import GithubSearchPage from './containers/GithubSearchPage'
+import LoginPage from './containers/LoginPage'
 import NotFoundPage from './utils/NotFoundPage'
 
 const App = () => {
     return (
         <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/books" element={<BookListContainer />} />
             <Route path="/books/:bookId" element={<BookDetailContainer />} />
             <Route path="/" element={<Home />} />
