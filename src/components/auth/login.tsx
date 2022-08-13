@@ -1,4 +1,4 @@
-import React, {FormEvent, SyntheticEvent, useState} from 'react'
+import React, {SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
@@ -51,12 +51,11 @@ const Login = () => {
     }
 
     const handleBlurEmail = (evt: SyntheticEvent) => {
-        evt.preventDefault()
-        const target = evt.target as HTMLInputElement
-        const {value} = target
-
-        if (!validEmail(value))
-            setEmailValMsg('The email is invalid. Example: john.doe@domain.com')
+        if (!validEmail(formValues.email))
+            setEmailValMsg(
+                `The email is invalid. Example: john.doe@domain.com.
+                 Password must have 1 capital letter, 1 lowercase letter, and 1 special character.`,
+            )
         else setEmailValMsg('')
     }
 
