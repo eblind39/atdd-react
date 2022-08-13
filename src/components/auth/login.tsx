@@ -1,4 +1,4 @@
-import React, {SyntheticEvent, useState} from 'react'
+import React, {FormEvent, SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
@@ -8,8 +8,19 @@ const Login = () => {
 
     const handleSubmit = (evt: SyntheticEvent) => {
         evt.preventDefault()
-        setEmailValMsg('The email is required')
-        setPasswordValMsg('The password is required')
+        const target = evt.target as HTMLFormElement
+        const elements = target.elements as typeof target.elements & {
+            email: {value: string}
+            password: {value: string}
+        }
+
+        const {email, password} = elements
+
+        if (!email.value) setEmailValMsg('The email is required')
+        else setEmailValMsg('')
+
+        if (!password.value) setPasswordValMsg('The password is required')
+        else setPasswordValMsg('')
     }
 
     return (
@@ -19,11 +30,13 @@ const Login = () => {
                 <TextField
                     label="email"
                     id="email"
+                    name="email"
                     helperText={emailValMsg}
                 ></TextField>
                 <TextField
                     label="password"
                     id="password"
+                    name="password"
                     type="password"
                     helperText={passwordValMsg}
                 ></TextField>

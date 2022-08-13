@@ -31,3 +31,19 @@ describe('when the user leaves empty fields and clicks the submit button', () =>
         ).toBeInTheDocument()
     })
 })
+
+describe('when the user fills the fields and clicks the submit button', () => {
+    it('must not display the required messages', () => {
+        ;(screen.getByLabelText('email') as HTMLInputElement).value =
+            'john.doe@test.com'
+        ;(screen.getByLabelText('password') as HTMLInputElement).value =
+            'Aa123456789!@#'
+        fireEvent.click(screen.getByRole('button', {name: /send/i}))
+        expect(
+            screen.queryByText(/the email is required/i),
+        ).not.toBeInTheDocument()
+        expect(
+            screen.queryByText(/the password is required/i),
+        ).not.toBeInTheDocument()
+    })
+})
