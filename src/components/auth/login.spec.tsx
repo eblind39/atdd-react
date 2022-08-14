@@ -247,6 +247,9 @@ describe('when the user submit the login form with valid data and there is an un
 
 describe('when the user submit the login form with valid data and there is an invalid credentials error', () => {
     it('must display the error message “The email or password are not correct” from the api', async () => {
+        const wrongemail = 'wrong@domail.com'
+        const wrongpassword = 'Aa12345678$'
+
         server.use(
             rest.post('/login', (req, res, ctx) => {
                 const {email, password} = req.body as DefaultBodyType & {
@@ -254,10 +257,7 @@ describe('when the user submit the login form with valid data and there is an in
                     password: string
                 }
 
-                if (
-                    email === 'wrong@domail.com' &&
-                    password === 'Aa12345678$'
-                ) {
+                if (email === wrongemail && password === wrongpassword) {
                     return res(
                         ctx.status(HTTPStatusCodes.UNAUTHORIZED),
                         ctx.json({
@@ -273,7 +273,11 @@ describe('when the user submit the login form with valid data and there is an in
             }),
         )
 
-        fillInputs({email: 'wrong@domail.com', password: 'Aa12345678$'})
+        expect(
+            screen.queryByText(/the email or password are not correct/i),
+        ).not.toBeInTheDocument()
+
+        fillInputs({email: wrongemail, password: wrongpassword})
         fireEvent.click(getSendButton())
 
         expect(
