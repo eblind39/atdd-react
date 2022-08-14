@@ -14,11 +14,15 @@ import EmployeePage from './containers/EmployeePage'
 import NotFoundPage from './utils/NotFoundPage'
 import PrivateRoutes from './components/privroutes'
 
-const App = () => {
+interface Props {
+    isAuth: boolean
+}
+
+const App = ({isAuth}: Props) => {
     return (
         <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route element={<PrivateRoutes />}>
+            <Route element={<PrivateRoutes isAuth={isAuth} />}>
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/employee" element={<EmployeePage />} />
             </Route>
