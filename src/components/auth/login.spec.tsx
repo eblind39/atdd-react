@@ -13,16 +13,27 @@ import Login from './login'
 
 const server = setupServer(...handlers)
 
+const pwValidationMsg =
+    'The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character'
+
+const getSendButton = () => screen.getByRole('button', {name: /send/i})
+
+const fillInputWithValidValues = () => {
+    const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/password/i)
+    fireEvent.change(emailInput, {
+        target: {value: 'john.doe@test.com'},
+    })
+    fireEvent.change(passwordInput, {
+        target: {value: 'Aa123456789!@#1.'},
+    })
+}
+
 beforeAll(() => server.listen())
 
 afterEach(() => server.resetHandlers())
 
 afterAll(() => server.close())
-
-const pwValidationMsg =
-    'The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character'
-
-const getSendButton = () => screen.getByRole('button', {name: /send/i})
 
 beforeEach(() => render(<Login />))
 
@@ -61,10 +72,8 @@ describe('when the user leaves empty fields and clicks the submit button', () =>
 
 describe('when the user fills the fields and clicks the submit button', () => {
     it('must not display the required messages', async () => {
-        ;(screen.getByLabelText(/email/i) as HTMLInputElement).value =
-            'john.doe@test.com'
-        ;(screen.getByLabelText(/password/i) as HTMLInputElement).value =
-            'Aa123456789!@#'
+        fillInputWithValidValues()
+
         fireEvent.click(getSendButton())
         expect(
             screen.queryByText(/the email is required/i),
@@ -178,6 +187,8 @@ describe('when the user fills and blur the password input with a valid value', (
 
 describe('when the user submit the login form with valid data', () => {
     it('must disable the submit button while the form page is fetching the data', async () => {
+        fillInputWithValidValues()
+
         fireEvent.click(getSendButton())
 
         expect(getSendButton()).toBeDisabled()
@@ -191,6 +202,8 @@ describe('when the user submit the login form with valid data', () => {
         expect(
             screen.queryByTestId('loading-indicator'),
         ).not.toBeInTheDocument()
+
+        fillInputWithValidValues()
 
         fireEvent.click(getSendButton())
 

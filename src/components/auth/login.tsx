@@ -38,19 +38,15 @@ const Login = () => {
 
     const handleSubmit = async (evt: SyntheticEvent) => {
         evt.preventDefault()
-        const target = evt.target as HTMLFormElement
-        const elements = target.elements as typeof target.elements & {
-            email: {value: string}
-            password: {value: string}
-        }
 
-        const {email, password} = elements
+        const {email, password} = formValues
 
-        if (!email.value) setEmailValMsg('The email is required')
-        else setEmailValMsg('')
+        if (!email) setEmailValMsg('The email is required')
+        if (!password) setPasswordValMsg('The password is required')
+        if (!email || !password) return
 
-        if (!password.value) setPasswordValMsg('The password is required')
-        else setPasswordValMsg('')
+        setEmailValMsg('')
+        setPasswordValMsg('')
 
         setIsFetching(true)
 
