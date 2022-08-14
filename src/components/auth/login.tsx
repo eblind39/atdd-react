@@ -2,6 +2,7 @@ import React, {SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import {doLogin} from '../../services/loginService'
 
 interface FormValues {
     email: string
@@ -36,14 +37,19 @@ const Login = () => {
     })
     const [isFetching, setIsFetching] = useState<boolean>(false)
 
-    const handleSubmit = async (evt: SyntheticEvent) => {
-        evt.preventDefault()
-
+    const noValidForm = (): boolean => {
         const {email, password} = formValues
 
         if (!email) setEmailValMsg('The email is required')
         if (!password) setPasswordValMsg('The password is required')
-        if (!email || !password) return
+
+        return !email || !password
+    }
+
+    const handleSubmit = async (evt: SyntheticEvent) => {
+        evt.preventDefault()
+
+        if (noValidForm()) return
 
         setEmailValMsg('')
         setPasswordValMsg('')
@@ -55,8 +61,9 @@ const Login = () => {
         // })
         // setTimeout(() => setIsFetching(false), 3000)
 
-        await fetch('/login', {
-            method: 'POST',
+        await doLogin({
+            email: formValues.email,
+            password: formValues.password,
         })
 
         setIsFetching(false)

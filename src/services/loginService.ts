@@ -3,7 +3,7 @@ interface Params {
     password: string
 }
 
-const getRepos = ({email, password}: Params) => {
+const doLogin = ({email, password}: Params) => {
     const strBody: BodyInit = `{"email":"${email}","password":"${password}"}`
 
     // http://localhost:3007/
@@ -17,4 +17,4 @@ const getRepos = ({email, password}: Params) => {
     })
 }
 
-export {getRepos}
+export {doLogin}
