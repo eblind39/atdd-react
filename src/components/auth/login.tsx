@@ -2,6 +2,7 @@ import React, {SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import Snackbar from '@mui/material/Snackbar'
 import {doLogin} from '../../services/loginService'
 
 interface FormValues {
@@ -36,6 +37,8 @@ const Login = () => {
         password: '',
     })
     const [isFetching, setIsFetching] = useState<boolean>(false)
+    const [isOpenSnack, setIsOpenSnack] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     const noValidForm = (): boolean => {
         const {email, password} = formValues
@@ -54,19 +57,33 @@ const Login = () => {
         setEmailValMsg('')
         setPasswordValMsg('')
 
-        setIsFetching(true)
+        try {
+            setIsFetching(true)
 
-        // await fetch('http://localhost:3007/login', {
-        //     method: 'GET',
-        // })
-        // setTimeout(() => setIsFetching(false), 3000)
+            // const response: Response = await fetch('http://localhost:3007/login', {
+            //     method: 'GET',
+            // })
+            // setTimeout(() => setIsFetching(false), 3000)
 
-        await doLogin({
-            email: formValues.email,
-            password: formValues.password,
-        })
+            const response: Response = await doLogin({
+                email: formValues.email,
+                password: formValues.password,
+            })
 
-        setIsFetching(false)
+            if (!response.ok) throw response
+
+            const data = await response.json()
+        } catch (err: unknown) {
+            if (err instanceof Response) {
+                const data = await err.json()
+                if (data.hasOwnProperty('message')) {
+                    setIsOpenSnack(true)
+                    setErrorMessage(data.message)
+                }
+            }
+        } finally {
+            setIsFetching(false)
+        }
     }
 
     const handleChange = (evt: SyntheticEvent) => {
@@ -92,6 +109,8 @@ const Login = () => {
             )
         else setPasswordValMsg('')
     }
+
+    const handleCloseSnackbar = () => setIsOpenSnack(false)
 
     return (
         <React.Fragment>
@@ -121,6 +140,12 @@ const Login = () => {
                     Send
                 </Button>
             </form>
+            <Snackbar
+                open={isOpenSnack}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                message={errorMessage}
+            />
         </React.Fragment>
     )
 }

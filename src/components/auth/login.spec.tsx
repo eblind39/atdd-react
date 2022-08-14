@@ -10,13 +10,16 @@ import {setupServer} from 'msw/node'
 import {handlers} from '../../mocks/handlers'
 
 import Login from './login'
+import {HTTPStatusCodes} from '../../types/HttpCodes'
+import {rest} from 'msw'
 
 const server = setupServer(...handlers)
 
 const pwValidationMsg =
     'The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character'
 
-const getSendButton = () => screen.getByRole('button', {name: /send/i})
+const getSendButton = (): HTMLButtonElement =>
+    screen.getByRole('button', {name: /send/i})
 
 const fillInputWithValidValues = () => {
     const emailInput = screen.getByLabelText(/email/i)
@@ -213,4 +216,29 @@ describe('when the user submit the login form with valid data', () => {
             screen.queryByTestId('loading-indicator'),
         )
     })
+})
+
+describe('when the user submit the login form with valid data and there is an unexpected server error', () => {
+    it('must display the error message “Unexpected error, please try again” from the api', async () => {
+        server.use(
+            rest.post('/login', (req, res, ctx) =>
+                res(
+                    ctx.status(HTTPStatusCodes.INTERNAL_SERVER_ERROR),
+                    ctx.json({message: 'Unexpected error, please try again'}),
+                ),
+            ),
+        )
+
+        fillInputWithValidValues()
+
+        fireEvent.click(getSendButton())
+
+        expect(
+            await screen.findByText(/unexpected error, please try again/i),
+        ).toBeInTheDocument()
+    })
+})
+
+describe.skip('when the user submit the login form with valid data and there is an invalid credentials error', () => {
+    it('must display the error message “The email or password are not correct” from the api', () => {})
 })
