@@ -27,7 +27,7 @@ const server = setupServer(
                 return res(ctx.status(HTTPStatusCodes.RESOURCE_CREATED))
             }
 
-            return res(ctx.status(HTTPStatusCodes.SERVER_ERROR))
+            return res(ctx.status(HTTPStatusCodes.INTERNAL_SERVER_ERROR))
         },
     ),
 )

@@ -70,7 +70,7 @@ const Form = () => {
         } else {
             setIsSuccess(false)
             setIsSaving(false)
-            if (response.status === HTTPStatusCodes.SERVER_ERROR) {
+            if (response.status === HTTPStatusCodes.INTERNAL_SERVER_ERROR) {
                 setErrorMessage('Unexpected error, please try again')
                 return
             }
