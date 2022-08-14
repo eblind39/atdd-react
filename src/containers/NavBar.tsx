@@ -15,6 +15,8 @@ import ColorLensIcon from '@mui/icons-material/ColorLens'
 import ImagesearchRollerIcon from '@mui/icons-material/ImagesearchRoller'
 import ManageSearchIcon from '@mui/icons-material/ManageSearch'
 import LoginIcon from '@mui/icons-material/Login'
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
+import BadgeIcon from '@mui/icons-material/Badge'
 import {Link} from 'react-router-dom'
 
 const NavBar: React.FC = (): JSX.Element => {
@@ -27,6 +29,22 @@ const NavBar: React.FC = (): JSX.Element => {
                     </ListItemIcon>
                     <Link to="/login">
                         <Typography variant="inherit">Login</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <AdminPanelSettingsIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/admin">
+                        <Typography variant="inherit">Admin</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <BadgeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/employee">
+                        <Typography variant="inherit">Employee</Typography>
                     </Link>
                 </MenuItem>
                 <MenuItem>
