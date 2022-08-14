@@ -179,6 +179,7 @@ const Login = () => {
                             onBlur={handleBlurEmail}
                             value={formValues.email}
                             fullWidth
+                            margin="normal"
                         ></TextField>
                         <TextField
                             label="password"
@@ -190,6 +191,7 @@ const Login = () => {
                             onBlur={handleBlurPassword}
                             value={formValues.password}
                             fullWidth
+                            margin="normal"
                         ></TextField>
 
                         <Button
