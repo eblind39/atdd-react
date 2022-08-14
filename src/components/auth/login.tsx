@@ -3,6 +3,17 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
+import Avatar from '@mui/material/Avatar'
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {doLogin} from '../../services/loginService'
 
 interface FormValues {
@@ -112,41 +123,95 @@ const Login = () => {
 
     const handleCloseSnackbar = () => setIsOpenSnack(false)
 
+    const Copyright = (props: any) => {
+        return (
+            <Typography
+                variant="body2"
+                color="text.secondary"
+                align="center"
+                {...props}
+            >
+                {'Copyright © '}
+                <Link color="inherit" href="https://mui.com/">
+                    React Testing Inc
+                </Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        )
+    }
+
+    const theme = createTheme()
+
     return (
-        <React.Fragment>
-            <h1>Login</h1>
-            {isFetching && <CircularProgress data-testid="loading-indicator" />}
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="email"
-                    id="email"
-                    name="email"
-                    helperText={emailValMsg}
-                    onChange={handleChange}
-                    onBlur={handleBlurEmail}
-                    value={formValues.email}
-                ></TextField>
-                <TextField
-                    label="password"
-                    id="password"
-                    name="password"
-                    type="password"
-                    helperText={passwordValMsg}
-                    onChange={handleChange}
-                    onBlur={handleBlurPassword}
-                    value={formValues.password}
-                ></TextField>
-                <Button type="submit" disabled={isFetching}>
-                    Send
-                </Button>
-            </form>
-            <Snackbar
-                open={isOpenSnack}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-                message={errorMessage}
-            />
-        </React.Fragment>
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                {isFetching && (
+                    <CircularProgress data-testid="loading-indicator" />
+                )}
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Login
+                    </Typography>
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        noValidate
+                        sx={{mt: 1}}
+                    >
+                        <TextField
+                            label="email"
+                            id="email"
+                            name="email"
+                            helperText={emailValMsg}
+                            onChange={handleChange}
+                            onBlur={handleBlurEmail}
+                            value={formValues.email}
+                            fullWidth
+                        ></TextField>
+                        <TextField
+                            label="password"
+                            id="password"
+                            name="password"
+                            type="password"
+                            helperText={passwordValMsg}
+                            onChange={handleChange}
+                            onBlur={handleBlurPassword}
+                            value={formValues.password}
+                            fullWidth
+                        ></TextField>
+
+                        <Button
+                            type="submit"
+                            disabled={isFetching}
+                            fullWidth
+                            variant="contained"
+                            sx={{mt: 3, mb: 2}}
+                        >
+                            Send
+                        </Button>
+                    </Box>
+                </Box>
+                <Copyright sx={{mt: 8, mb: 4}} />
+                <Snackbar
+                    open={isOpenSnack}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    message={errorMessage}
+                />
+            </Container>
+        </ThemeProvider>
     )
 }
 
