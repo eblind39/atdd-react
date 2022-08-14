@@ -11,7 +11,7 @@ import {handlers} from '../../mocks/handlers'
 
 import Login from './login'
 import {HTTPStatusCodes} from '../../types/HttpCodes'
-import {rest} from 'msw'
+import {DefaultBodyType, rest} from 'msw'
 
 const server = setupServer(...handlers)
 
@@ -21,14 +21,22 @@ const pwValidationMsg =
 const getSendButton = (): HTMLButtonElement =>
     screen.getByRole('button', {name: /send/i})
 
-const fillInputWithValidValues = () => {
+interface InputProps {
+    email?: string
+    password?: string
+}
+
+const fillInputs = ({
+    email = 'john.doe@test.com',
+    password = 'Aa123456789!@#1.',
+}: InputProps = {}) => {
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/password/i)
     fireEvent.change(emailInput, {
-        target: {value: 'john.doe@test.com'},
+        target: {value: email},
     })
     fireEvent.change(passwordInput, {
-        target: {value: 'Aa123456789!@#1.'},
+        target: {value: password},
     })
 }
 
@@ -75,7 +83,7 @@ describe('when the user leaves empty fields and clicks the submit button', () =>
 
 describe('when the user fills the fields and clicks the submit button', () => {
     it('must not display the required messages', async () => {
-        fillInputWithValidValues()
+        fillInputs()
 
         fireEvent.click(getSendButton())
         expect(
@@ -190,7 +198,7 @@ describe('when the user fills and blur the password input with a valid value', (
 
 describe('when the user submit the login form with valid data', () => {
     it('must disable the submit button while the form page is fetching the data', async () => {
-        fillInputWithValidValues()
+        fillInputs()
 
         fireEvent.click(getSendButton())
 
@@ -206,8 +214,7 @@ describe('when the user submit the login form with valid data', () => {
             screen.queryByTestId('loading-indicator'),
         ).not.toBeInTheDocument()
 
-        fillInputWithValidValues()
-
+        fillInputs()
         fireEvent.click(getSendButton())
 
         expect(screen.getByTestId('loading-indicator')).toBeInTheDocument()
@@ -229,8 +236,7 @@ describe('when the user submit the login form with valid data and there is an un
             ),
         )
 
-        fillInputWithValidValues()
-
+        fillInputs()
         fireEvent.click(getSendButton())
 
         expect(
@@ -239,6 +245,39 @@ describe('when the user submit the login form with valid data and there is an un
     })
 })
 
-describe.skip('when the user submit the login form with valid data and there is an invalid credentials error', () => {
-    it('must display the error message “The email or password are not correct” from the api', () => {})
+describe('when the user submit the login form with valid data and there is an invalid credentials error', () => {
+    it('must display the error message “The email or password are not correct” from the api', async () => {
+        server.use(
+            rest.post('/login', (req, res, ctx) => {
+                const {email, password} = req.body as DefaultBodyType & {
+                    email: string
+                    password: string
+                }
+
+                if (
+                    email === 'wrong@domail.com' &&
+                    password === 'Aa12345678$'
+                ) {
+                    return res(
+                        ctx.status(HTTPStatusCodes.UNAUTHORIZED),
+                        ctx.json({
+                            message: 'The email or password are not correct',
+                        }),
+                    )
+                }
+
+                return res(
+                    ctx.status(HTTPStatusCodes.OK_STATUS),
+                    ctx.json({message: 'Ok'}),
+                )
+            }),
+        )
+
+        fillInputs({email: 'wrong@domail.com', password: 'Aa12345678$'})
+        fireEvent.click(getSendButton())
+
+        expect(
+            await screen.findByText(/the email or password are not correct/i),
+        ).toBeInTheDocument()
+    })
 })
