@@ -1,6 +1,7 @@
 import React, {SyntheticEvent, useState} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 
 interface FormValues {
     email: string
@@ -53,6 +54,11 @@ const Login = () => {
 
         setIsFetching(true)
 
+        // await fetch('http://localhost:3007/login', {
+        //     method: 'GET',
+        // })
+        // setTimeout(() => setIsFetching(false), 3000)
+
         await fetch('/login', {
             method: 'POST',
         })
@@ -87,6 +93,7 @@ const Login = () => {
     return (
         <React.Fragment>
             <h1>Login</h1>
+            {isFetching && <CircularProgress data-testid="loading-indicator" />}
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="email"
