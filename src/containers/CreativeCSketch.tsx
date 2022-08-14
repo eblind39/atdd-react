@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 const canvasSketch = require('canvas-sketch')
 
 interface SketchProps {
@@ -41,8 +41,14 @@ const drawSquares = ({context, width, height}: SketchProps) => {
 
 const CreativeCSketch = () => {
     const [timerId, setTimerId] = useState<number>(0)
+    const didMount = useRef<boolean>(false)
 
     useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true
+            return
+        }
+
         const settings = {
             dimensions: [2048, 2048],
         }
