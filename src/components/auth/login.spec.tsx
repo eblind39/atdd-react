@@ -7,13 +7,12 @@ import {
     waitForElementToBeRemoved,
 } from '@testing-library/react'
 import {setupServer} from 'msw/node'
-import {handlers} from '../../mocks/handlers'
-
-import Login from './login'
-import {HTTPStatusCodes} from '../../types/HttpCodes'
 import {DefaultBodyType, rest} from 'msw'
 
-const server = setupServer(...handlers)
+import {handlers, handleInvalidCredentials} from '../../mocks/handlers'
+import Login from './login'
+import {HTTPStatusCodes} from '../../types/HttpCodes'
+import {fillInputs} from '../../__fixtures__/loginutils'
 
 const pwValidationMsg =
     'The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character'
@@ -21,24 +20,7 @@ const pwValidationMsg =
 const getSendButton = (): HTMLButtonElement =>
     screen.getByRole('button', {name: /send/i})
 
-interface InputProps {
-    email?: string
-    password?: string
-}
-
-const fillInputs = ({
-    email = 'john.doe@test.com',
-    password = 'Aa123456789!@#1.',
-}: InputProps = {}) => {
-    const emailInput = screen.getByLabelText(/email/i)
-    const passwordInput = screen.getByLabelText(/password/i)
-    fireEvent.change(emailInput, {
-        target: {value: email},
-    })
-    fireEvent.change(passwordInput, {
-        target: {value: password},
-    })
-}
+const server = setupServer(...handlers)
 
 beforeAll(() => server.listen())
 
@@ -250,28 +232,7 @@ describe('when the user submit the login form with valid data and there is an in
         const wrongemail = 'wrong@domail.com'
         const wrongpassword = 'Aa12345678$'
 
-        server.use(
-            rest.post('/login', (req, res, ctx) => {
-                const {email, password} = req.body as DefaultBodyType & {
-                    email: string
-                    password: string
-                }
-
-                if (email === wrongemail && password === wrongpassword) {
-                    return res(
-                        ctx.status(HTTPStatusCodes.UNAUTHORIZED),
-                        ctx.json({
-                            message: 'The email or password are not correct',
-                        }),
-                    )
-                }
-
-                return res(
-                    ctx.status(HTTPStatusCodes.OK_STATUS),
-                    ctx.json({message: 'Ok'}),
-                )
-            }),
-        )
+        server.use(handleInvalidCredentials({wrongemail, wrongpassword}))
 
         expect(
             screen.queryByText(/the email or password are not correct/i),

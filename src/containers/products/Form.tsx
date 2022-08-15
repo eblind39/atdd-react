@@ -109,7 +109,6 @@ const Form = () => {
 
     return (
         <React.Fragment>
-            <NavBar />
             <Container maxWidth="sm">
                 {isSuccess ? <p>Product stored</p> : null}
                 {errorMessage ? <p>{errorMessage}</p> : null}

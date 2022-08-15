@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react'
+import WithNavBar from '../components/withnavbar'
 const canvasSketch = require('canvas-sketch')
 
 interface SketchProps {
@@ -71,11 +72,7 @@ const CreativeCSketch = () => {
         canvasSketch(sketch, settings)
     }, [])
 
-    return (
-        <React.Fragment>
-            <h1>Canvas Sketch</h1>
-        </React.Fragment>
-    )
+    return <WithNavBar element={<h1>Canvas Sketch</h1>} />
 }
 
 export default CreativeCSketch

@@ -11,6 +11,7 @@ import {
 import SearchBox from '../utils/SearchBox'
 import NavBar from './NavBar'
 import BookList from '../components/books/BookList'
+import WithNavBar from '../components/withnavbar'
 
 const BookListContainer = () => {
     const [term, setTerm] = useState<string>('')
@@ -28,13 +29,16 @@ const BookListContainer = () => {
         dispatch(getBooks(term))
     }, [dispatch, term])
 
-    return (
-        <React.Fragment>
-            <NavBar />
-            <SearchBox term={term} onSearch={onSearch} />
-            <BookList books={books} loading={loading} error={error} />
-        </React.Fragment>
-    )
+    const RenderBookPage = () => {
+        return (
+            <React.Fragment>
+                <SearchBox term={term} onSearch={onSearch} />
+                <BookList books={books} loading={loading} error={error} />
+            </React.Fragment>
+        )
+    }
+
+    return <WithNavBar element={<RenderBookPage />} />
 }
 
 export default BookListContainer

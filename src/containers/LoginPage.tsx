@@ -1,15 +1,8 @@
 import React from 'react'
+import WithNavBar from '../components/withnavbar'
 
 import Login from '../components/auth/login'
-import NavBar from './NavBar'
 
-const LoginPage = () => {
-    return (
-        <React.Fragment>
-            <NavBar />
-            <Login />
-        </React.Fragment>
-    )
-}
+const LoginPage = () => <WithNavBar element={<Login />} />
 
 export default LoginPage

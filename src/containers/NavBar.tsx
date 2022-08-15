@@ -21,7 +21,7 @@ import {Link} from 'react-router-dom'
 
 const NavBar: React.FC = (): JSX.Element => {
     return (
-        <Paper sx={{width: 230}}>
+        <Paper sx={{width: 230, opacity: '80%', marginTop: '60px'}}>
             <MenuList>
                 <MenuItem>
                     <ListItemIcon>

@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
+import WithNavBar from '../components/withnavbar'
 
 const initCanvas = (): CanvasRenderingContext2D | null => {
     let canvasEl: HTMLCanvasElement | null = document.querySelector('canvas')
@@ -53,8 +54,14 @@ const drawSquares = (context: CanvasRenderingContext2D) => {
 
 const CreativAnims = () => {
     const [timerId, setTimerId] = useState<number>(0)
+    const didMount = useRef<boolean>(false)
 
     useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true
+            return
+        }
+
         let context: CanvasRenderingContext2D | null = initCanvas()
         if (context === null) return
         drawInit(context)
@@ -69,11 +76,7 @@ const CreativAnims = () => {
         }
     }, [])
 
-    return (
-        <React.Fragment>
-            <canvas width={600} height={600}></canvas>
-        </React.Fragment>
-    )
+    return <WithNavBar element={<canvas width={600} height={600}></canvas>} />
 }
 
 export default CreativAnims

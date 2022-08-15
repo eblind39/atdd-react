@@ -1,13 +1,6 @@
 import React from 'react'
-import NavBar from './NavBar'
+import WithNavBar from '../components/withnavbar'
 
-const AdminPage = () => {
-    return (
-        <React.Fragment>
-            <NavBar />
-            <h1>Admin page</h1>
-        </React.Fragment>
-    )
-}
+const AdminPage = () => <WithNavBar element={<h1>Admin page</h1>} />
 
 export default AdminPage

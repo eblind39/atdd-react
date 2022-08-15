@@ -5,16 +5,15 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
 import Avatar from '@mui/material/Avatar'
 import CssBaseline from '@mui/material/CssBaseline'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
+import {Navigate} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {doLogin} from '../../services/loginService'
+import {EnumStrings} from '../../types/strings'
 
 interface FormValues {
     email: string
@@ -40,6 +39,8 @@ const validPassword = (password: string): boolean => {
     return !!validPWGuidelinesRequirements
 }
 
+type UserType = {role: string}
+
 const Login = () => {
     const [emailValMsg, setEmailValMsg] = useState<string>('')
     const [passwordValMsg, setPasswordValMsg] = useState<string>('')
@@ -50,6 +51,7 @@ const Login = () => {
     const [isFetching, setIsFetching] = useState<boolean>(false)
     const [isOpenSnack, setIsOpenSnack] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>('')
+    const [user, setUser] = useState<UserType>({role: ''})
 
     const noValidForm = (): boolean => {
         const {email, password} = formValues
@@ -83,7 +85,11 @@ const Login = () => {
 
             if (!response.ok) throw response
 
-            const data = await response.json()
+            const {
+                user: {role},
+            } = await response.json()
+
+            setUser({role})
         } catch (err: unknown) {
             if (err instanceof Response) {
                 const data = await err.json()
@@ -142,6 +148,11 @@ const Login = () => {
     }
 
     const theme = createTheme()
+
+    if (!isFetching && user.role === EnumStrings.ROLE_ADMIN)
+        return <Navigate to="/admin" />
+    if (!isFetching && user.role === EnumStrings.ROLE_EMPLOYEE)
+        return <Navigate to="/employee" />
 
     return (
         <ThemeProvider theme={theme}>

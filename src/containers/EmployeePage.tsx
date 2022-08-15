@@ -1,13 +1,6 @@
 import React from 'react'
-import NavBar from './NavBar'
+import WithNavBar from '../components/withnavbar'
 
-const EmployeePage = () => {
-    return (
-        <React.Fragment>
-            <NavBar />
-            <h1>Employee page</h1>
-        </React.Fragment>
-    )
-}
+const EmployeePage = () => <WithNavBar element={<h1>Employee page</h1>} />
 
 export default EmployeePage
