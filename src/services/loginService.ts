@@ -30,7 +30,7 @@ const validPassword = (password: string): boolean => {
     const validPWGuidelinesRequirements: RegExpMatchArray | null = String(
         password,
     ).match(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=,~;:\\\'\""<>\\_\-`\.\[\]{}|/\*\(\)\?]).*$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=,~;:\\'""<>\\_\-`.[\]{}|/*()?]).*$/,
     )
 
     return !!validPWGuidelinesRequirements

@@ -1,8 +1,7 @@
-import {BrowserRouter, Router} from 'react-router-dom'
+import {BrowserRouter} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ElegibleType from '../types/ElegibleType'
-import AuthContext from '../services/auth-context'
 
 const getElegibleTypeDescr = (elegibleType: ElegibleType | undefined) => {
     if (typeof elegibleType === 'undefined') return 'No value given'
