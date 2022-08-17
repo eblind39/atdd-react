@@ -6,7 +6,7 @@ import {handlers} from '../../mocks/handlers'
 import {renderWithRouter} from '../../utils'
 import {fillInputs} from '../../__fixtures__/loginutils'
 import {EnumStrings} from '../../types/strings'
-import AuthContext from '../../services/auth-context'
+import AuthGuard from '../auth-guard'
 
 const server = setupServer(...handlers)
 
@@ -20,9 +20,9 @@ const renderWithAuthCtx = (isAuth: boolean = false) => {
     }
 
     return (
-        <AuthContext.Provider value={values}>
+        <AuthGuard isAuth={isAuth}>
             <App />
-        </AuthContext.Provider>
+        </AuthGuard>
     )
 }
 
