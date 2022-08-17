@@ -22,8 +22,6 @@ type FormValues = {
     password: string
 }
 
-type UserType = {role: string}
-
 const Login = () => {
     const [emailValMsg, setEmailValMsg] = useState<string>('')
     const [passwordValMsg, setPasswordValMsg] = useState<string>('')
@@ -34,8 +32,7 @@ const Login = () => {
     const [isFetching, setIsFetching] = useState<boolean>(false)
     const [isOpenSnack, setIsOpenSnack] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>('')
-    const [user, setUser] = useState<UserType>({role: ''})
-    const {handleSuccessLogin} = useContext(AuthContext)
+    const {handleSuccessLogin, user} = useContext(AuthContext)
 
     const noValidForm = (): boolean => {
         const {email, password} = formValues
@@ -72,8 +69,8 @@ const Login = () => {
             const {
                 user: {role},
             } = await response.json()
-            setUser({role})
-            handleSuccessLogin()
+
+            handleSuccessLogin({role})
         } catch (err: unknown) {
             if (err instanceof Response) {
                 const data = await err.json()

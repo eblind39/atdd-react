@@ -8,23 +8,18 @@ import {fillInputs} from '../../__fixtures__/loginutils'
 import {EnumStrings} from '../../types/strings'
 import AuthGuard from '../auth-guard'
 
-const server = setupServer(...handlers)
-
 const getSendButton = (): HTMLButtonElement =>
     screen.getByRole('button', {name: /send/i})
 
 const renderWithAuthCtx = (isAuth: boolean = false) => {
-    const values = {
-        isAuth,
-        handleSuccessLogin: jest.fn(),
-    }
-
     return (
         <AuthGuard isAuth={isAuth}>
             <App />
         </AuthGuard>
     )
 }
+
+const server = setupServer(...handlers)
 
 beforeAll(() => server.listen())
 
