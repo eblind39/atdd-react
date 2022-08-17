@@ -31,7 +31,9 @@ afterAll(() => server.close())
 
 beforeEach(() =>
     render(
-        <AuthContext.Provider value={{handleSuccessLogin: jest.fn()}}>
+        <AuthContext.Provider
+            value={{handleSuccessLogin: jest.fn(), isAuth: true}}
+        >
             <Login />
         </AuthContext.Provider>,
     ),
