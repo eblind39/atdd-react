@@ -1,3 +1,4 @@
+import React, {useState} from 'react'
 import {Routes, Route} from 'react-router-dom'
 import BookListContainer from './containers/BookListContainer'
 import BookDetailContainer from './containers//BookDetailContainer'
@@ -14,11 +15,22 @@ import EmployeePage from './containers/EmployeePage'
 import NotFoundPage from './utils/NotFoundPage'
 import PrivateRoutes from './components/privroutes'
 
-const App = () => {
+interface Props {
+    isAuth: boolean
+}
+
+const App = ({isAuth}: Props) => {
+    const [isUserAuth, setIsUserAuth] = useState<boolean>(false)
+
+    const handleSuccessLogin = () => setIsUserAuth(true)
+
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route element={<PrivateRoutes />}>
+            <Route
+                path="/login"
+                element={<LoginPage onSuccessLogin={handleSuccessLogin} />}
+            />
+            <Route element={<PrivateRoutes isAuth={isUserAuth} />}>
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/employee" element={<EmployeePage />} />
             </Route>

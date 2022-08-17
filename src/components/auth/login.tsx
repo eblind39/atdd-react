@@ -5,7 +5,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Snackbar from '@mui/material/Snackbar'
 import Avatar from '@mui/material/Avatar'
 import CssBaseline from '@mui/material/CssBaseline'
-import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
@@ -14,6 +13,7 @@ import {Navigate} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {doLogin} from '../../services/loginService'
 import {EnumStrings} from '../../types/strings'
+import Copyright from '../copyright'
 
 interface FormValues {
     email: string
@@ -39,9 +39,13 @@ const validPassword = (password: string): boolean => {
     return !!validPWGuidelinesRequirements
 }
 
+interface Props {
+    onSuccessLogin: () => void
+}
+
 type UserType = {role: string}
 
-const Login = () => {
+const Login = ({onSuccessLogin}: Props) => {
     const [emailValMsg, setEmailValMsg] = useState<string>('')
     const [passwordValMsg, setPasswordValMsg] = useState<string>('')
     const [formValues, setFormValues] = useState<FormValues>({
@@ -88,8 +92,8 @@ const Login = () => {
             const {
                 user: {role},
             } = await response.json()
-
             setUser({role})
+            onSuccessLogin()
         } catch (err: unknown) {
             if (err instanceof Response) {
                 const data = await err.json()
@@ -128,24 +132,6 @@ const Login = () => {
     }
 
     const handleCloseSnackbar = () => setIsOpenSnack(false)
-
-    const Copyright = (props: any) => {
-        return (
-            <Typography
-                variant="body2"
-                color="text.secondary"
-                align="center"
-                {...props}
-            >
-                {'Copyright © '}
-                <Link color="inherit" href="https://mui.com/">
-                    React Testing Inc
-                </Link>{' '}
-                {new Date().getFullYear()}
-                {'.'}
-            </Typography>
-        )
-    }
 
     const theme = createTheme()
 
