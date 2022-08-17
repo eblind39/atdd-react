@@ -1,4 +1,4 @@
-import React, {SyntheticEvent, useState} from 'react'
+import React, {SyntheticEvent, useState, useContext} from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -13,39 +13,18 @@ import {Navigate} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {doLogin} from '../../services/loginService'
 import {EnumStrings} from '../../types/strings'
+import {validEmail, validPassword} from '../../services/loginService'
 import Copyright from '../copyright'
+import AuthContext from '../../services/auth-context'
 
-interface FormValues {
+type FormValues = {
     email: string
     password: string
 }
 
-const validEmail = (email: string): boolean => {
-    const validEmailFormat: RegExpMatchArray | null = String(email).match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    )
-
-    return !!validEmailFormat
-}
-
-const validPassword = (password: string): boolean => {
-    if (password.length < 8) return false
-    const validPWGuidelinesRequirements: RegExpMatchArray | null = String(
-        password,
-    ).match(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=,~;:\\\'\""<>\\_\-`\.\[\]{}|/\*\(\)\?]).*$/,
-    )
-
-    return !!validPWGuidelinesRequirements
-}
-
-interface Props {
-    onSuccessLogin: () => void
-}
-
 type UserType = {role: string}
 
-const Login = ({onSuccessLogin}: Props) => {
+const Login = () => {
     const [emailValMsg, setEmailValMsg] = useState<string>('')
     const [passwordValMsg, setPasswordValMsg] = useState<string>('')
     const [formValues, setFormValues] = useState<FormValues>({
@@ -56,6 +35,7 @@ const Login = ({onSuccessLogin}: Props) => {
     const [isOpenSnack, setIsOpenSnack] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>('')
     const [user, setUser] = useState<UserType>({role: ''})
+    const {handleSuccessLogin} = useContext(AuthContext)
 
     const noValidForm = (): boolean => {
         const {email, password} = formValues
@@ -93,7 +73,7 @@ const Login = ({onSuccessLogin}: Props) => {
                 user: {role},
             } = await response.json()
             setUser({role})
-            onSuccessLogin()
+            handleSuccessLogin()
         } catch (err: unknown) {
             if (err instanceof Response) {
                 const data = await err.json()

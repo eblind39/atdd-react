@@ -3,12 +3,6 @@ import WithNavBar from '../components/withnavbar'
 
 import Login from '../components/auth/login'
 
-interface Props {
-    onSuccessLogin: () => void
-}
-
-const LoginPage = ({onSuccessLogin}: Props) => (
-    <WithNavBar element={<Login onSuccessLogin={onSuccessLogin} />} />
-)
+const LoginPage = () => <WithNavBar element={<Login />} />
 
 export default LoginPage
