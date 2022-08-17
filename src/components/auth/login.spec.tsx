@@ -7,12 +7,13 @@ import {
     waitForElementToBeRemoved,
 } from '@testing-library/react'
 import {setupServer} from 'msw/node'
-import {DefaultBodyType, rest} from 'msw'
+import {rest} from 'msw'
 
 import {handlers, handleInvalidCredentials} from '../../mocks/handlers'
 import Login from './login'
 import {HTTPStatusCodes} from '../../types/HttpCodes'
 import {fillInputs} from '../../__fixtures__/loginutils'
+import AuthContext from '../../services/auth-context'
 
 const pwValidationMsg =
     'The password must contain at least 8 characters, 1 capital letter, 1 lowercase letter, and 1 special character'
@@ -28,7 +29,13 @@ afterEach(() => server.resetHandlers())
 
 afterAll(() => server.close())
 
-beforeEach(() => render(<Login />))
+beforeEach(() =>
+    render(
+        <AuthContext.Provider value={{handleSuccessLogin: jest.fn()}}>
+            <Login />
+        </AuthContext.Provider>,
+    ),
+)
 
 describe('when login page is mounted', () => {
     it('must display the login title', () => {

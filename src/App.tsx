@@ -20,7 +20,7 @@ interface Props {
     isAuth: boolean
 }
 
-const App = ({isAuth}: Props) => {
+const App = () => {
     const [isUserAuth, setIsUserAuth] = useState<boolean>(false)
 
     const handleSuccessLogin = () => setIsUserAuth(true)
@@ -33,10 +33,7 @@ const App = ({isAuth}: Props) => {
     return (
         <AuthContext.Provider value={authProviderValue}>
             <Routes>
-                <Route
-                    path="/login"
-                    element={<LoginPage onSuccessLogin={handleSuccessLogin} />}
-                />
+                <Route path="/login" element={<LoginPage />} />
                 <Route element={<PrivateRoutes isAuth={isUserAuth} />}>
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/employee" element={<EmployeePage />} />
