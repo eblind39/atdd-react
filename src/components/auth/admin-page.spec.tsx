@@ -37,3 +37,17 @@ describe('when the admin page is mounted', () => {
         expect(await screen.findByText(/john doe/i)).toBeInTheDocument()
     })
 })
+
+describe('when the admin goes to employee page', () => {
+    it('must have access', async () => {
+        renderWithRouter(renderWithAuthCtx(true), {route: '/login'})
+        fillInputs({email: EnumStrings.EMAIL_ADMIN})
+        fireEvent.click(getSendButton())
+
+        expect(await screen.findByText(/employee/i)).toBeInTheDocument()
+
+        fireEvent.click(screen.getByText(/employee/i))
+
+        expect(await screen.findByText(/employee page/i)).toBeInTheDocument()
+    })
+})

@@ -10,7 +10,7 @@ const AdminPage = () => {
             element={
                 <React.Fragment>
                     <h1>Admin page</h1>
-                    <h4>{user.username}</h4>
+                    <h4>Username displayed in AppBar</h4>
                 </React.Fragment>
             }
             username={user.username}
