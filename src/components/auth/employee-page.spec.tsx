@@ -7,7 +7,6 @@ import {fillInputs} from '../../__fixtures__/loginutils'
 import {EnumStrings} from '../../types/strings'
 import AuthGuard from '../auth-guard'
 import App from '../../App'
-// import AdminPage from '../../containers/AdminPage'
 
 const getSendButton = (): HTMLButtonElement =>
     screen.getByRole('button', {name: /send/i})

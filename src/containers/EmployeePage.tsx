@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import WithNavBar from '../components/withnavbar'
 import AuthContext from '../services/auth-context'
 
