@@ -13,6 +13,7 @@ const AdminPage = () => {
                     <h4>{user.username}</h4>
                 </React.Fragment>
             }
+            username={user.username}
         />
     )
 }

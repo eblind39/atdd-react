@@ -33,6 +33,7 @@ describe('when the admin page is mounted', () => {
         renderWithRouter(renderWithAuthCtx(true), {route: '/login'})
         fillInputs({email: EnumStrings.EMAIL_ADMIN})
         fireEvent.click(getSendButton())
+        expect(await screen.findByText(/admin page/i)).toBeInTheDocument()
         expect(await screen.findByText(/john doe/i)).toBeInTheDocument()
     })
 })
