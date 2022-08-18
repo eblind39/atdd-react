@@ -7,15 +7,15 @@ interface Props {
     isAuth: boolean
 }
 
-type ResponseType = {role: string}
+type ResponseType = {username: string; role: string}
 
 const AuthGuard = ({children, isAuth = false}: Props) => {
     const [isUserAuth, setIsUserAuth] = useState<boolean>(isAuth)
     const [user, setUser] = useState<UserType>({role: '', username: ''})
 
-    const handleSuccessLogin = ({role}: ResponseType) => {
+    const handleSuccessLogin = ({username, role}: ResponseType) => {
         setIsUserAuth(true)
-        setUser({role, username: ''})
+        setUser({username, role})
     }
 
     const authProviderValue = {

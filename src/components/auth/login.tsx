@@ -67,10 +67,10 @@ const Login = () => {
             if (!response.ok) throw response
 
             const {
-                user: {role},
+                user: {username, role},
             } = await response.json()
 
-            handleSuccessLogin({role})
+            handleSuccessLogin({username, role})
         } catch (err: unknown) {
             if (err instanceof Response) {
                 const data = await err.json()

@@ -11,18 +11,24 @@ const handlers = [
     rest.post<DefaultBodyType, PathParams<string>, DefaultBodyType>(
         '/login',
         (req, res, ctx) => {
+            let username: string = ''
             let role: string = ''
             const {email} = req.body as DefaultBodyType & {
                 email: string
             }
-            if (email === EnumStrings.EMAIL_ADMIN) role = EnumStrings.ROLE_ADMIN
-            if (email === EnumStrings.EMAIL_EMPLOYEE)
+            if (email === EnumStrings.EMAIL_ADMIN) {
+                username = 'John Doe'
+                role = EnumStrings.ROLE_ADMIN
+            }
+            if (email === EnumStrings.EMAIL_EMPLOYEE) {
+                username = 'Star Name'
                 role = EnumStrings.ROLE_EMPLOYEE
+            }
 
             sessionStorage.setItem('is-authenticated', 'true')
             sessionStorage.setItem('user-role', role)
 
-            return res(ctx.status(200), ctx.json({user: {role}}))
+            return res(ctx.status(200), ctx.json({user: {username, role}}))
         },
     ),
 ]

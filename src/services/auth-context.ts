@@ -2,12 +2,13 @@ import React from 'react'
 import {UserType} from '../types/login'
 
 interface SLogginProp {
+    username: string
     role: string
 }
 
 const AuthContext = React.createContext({
     isAuth: false,
-    handleSuccessLogin: ({role}: SLogginProp) => {},
+    handleSuccessLogin: ({username, role}: SLogginProp) => {},
     user: {role: '', username: ''} as UserType,
 })
 
