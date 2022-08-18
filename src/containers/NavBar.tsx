@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {
     MenuList,
     Paper,
@@ -18,8 +18,12 @@ import LoginIcon from '@mui/icons-material/Login'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import BadgeIcon from '@mui/icons-material/Badge'
 import {Link} from 'react-router-dom'
+import {EnumStrings} from '../types/strings'
+import AuthContext from '../services/auth-context'
 
 const NavBar: React.FC = (): JSX.Element => {
+    const {user} = useContext(AuthContext)
+
     return (
         <Paper
             sx={{
@@ -39,14 +43,16 @@ const NavBar: React.FC = (): JSX.Element => {
                         <Typography variant="inherit">Login</Typography>
                     </Link>
                 </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <AdminPanelSettingsIcon fontSize="small" />
-                    </ListItemIcon>
-                    <Link to="/admin">
-                        <Typography variant="inherit">Admin</Typography>
-                    </Link>
-                </MenuItem>
+                {user.role === EnumStrings.ROLE_ADMIN && (
+                    <MenuItem>
+                        <ListItemIcon>
+                            <AdminPanelSettingsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <Link to="/admin">
+                            <Typography variant="inherit">Admin</Typography>
+                        </Link>
+                    </MenuItem>
+                )}
                 <MenuItem>
                     <ListItemIcon>
                         <BadgeIcon fontSize="small" />
