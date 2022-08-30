@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>React Intro</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+
+        <script type="text/javascript">
+            const rootElement = document.querySelector('#root')
+
+            // using js DOM
+            const element = document.createElement('p')
+            element.textContent = 'Hello World!'
+            element.className = 'container'
+            rootElement.appendChild(element)
+
+            setTimeout(() => {
+                renderFromReact()
+            }, 2000)
+
+            // using React
+            const renderFromReact = () => {
+                const spanElem = React.createElement(
+                    'span',
+                    null,
+                    ' From ',
+                    'Span!',
+                )
+
+                const reactElement = React.createElement(
+                    'div',
+                    {
+                        children: [
+                            'Hello Universe!',
+                            ', Goodbye Universe...',
+                            spanElem,
+                        ],
+                        className: 'reactContainer',
+                    },
+                    // 'Hello Universe!',
+                    // ', Goodbye Universe...',
+                )
+
+                console.log(reactElement)
+
+                ReactDOM.render(reactElement, rootElement)
+            }
+        </script>
+    </body>
+</html>
