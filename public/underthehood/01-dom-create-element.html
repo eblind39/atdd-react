@@ -82,11 +82,23 @@
                     'Second Element',
                 )
 
+                const Message = props => (
+                    <div className="message">{props.children}</div>
+                )
+                const FCElem = (
+                    <div className="FCContainer">
+                        {Message({children: 'FC First'})}
+                        <Message children="FC Second" />
+                        <Message>FC Third</Message>
+                    </div>
+                )
+
                 const fragment = React.createElement(
                     React.Fragment,
                     null,
                     reactElement,
                     secondElem,
+                    FCElem,
                 )
 
                 ReactDOM.render(fragment, rootElement)
