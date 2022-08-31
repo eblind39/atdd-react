@@ -11,8 +11,9 @@
 
         <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
         <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-        <script type="text/javascript">
+        <script type="text/babel">
             const rootElement = document.querySelector('#root')
 
             // using js DOM
@@ -34,6 +35,28 @@
                     'Span!',
                 )
 
+                const childTxt = 'Hello, Cosmos!'
+                const myClassName = 'mainContent'
+                const JSXElem2 = <span>New</span>
+                const JSXElem3 = <strong>Text</strong>
+                const JSXElem = (
+                    <p class={myClassName}>
+                        {childTxt} {JSXElem2} {JSXElem3}
+                    </p>
+                )
+
+                const JSXElemWithChilds = (
+                    <p
+                        class={myClassName}
+                        children={<div>With children</div>}
+                    />
+                )
+
+                const children = <span>With Props</span>
+                const className = 'withProps'
+                const props = {children, className}
+                const JSXWithProps = <div id="with-props" {...props} />
+
                 const reactElement = React.createElement(
                     'div',
                     {
@@ -41,6 +64,9 @@
                             'Hello Universe!',
                             ', Goodbye Universe...',
                             spanElem,
+                            JSXElem,
+                            JSXElemWithChilds,
+                            JSXWithProps,
                         ],
                         className: 'reactContainer',
                     },
