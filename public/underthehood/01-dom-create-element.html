@@ -76,7 +76,20 @@
 
                 console.log(reactElement)
 
-                ReactDOM.render(reactElement, rootElement)
+                const secondElem = React.createElement(
+                    'p',
+                    null,
+                    'Second Element',
+                )
+
+                const fragment = React.createElement(
+                    React.Fragment,
+                    null,
+                    reactElement,
+                    secondElem,
+                )
+
+                ReactDOM.render(fragment, rootElement)
             }
         </script>
     </body>
