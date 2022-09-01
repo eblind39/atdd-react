@@ -12,6 +12,7 @@
         <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
         <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
 
         <script type="text/babel">
             const rootElement = document.querySelector('#root')
@@ -93,12 +94,40 @@
                     </div>
                 )
 
+                const SayHello = ({firstName, lastName}) => {
+                    return (
+                        <div>
+                            Hello {firstName} {lastName}
+                        </div>
+                    )
+                }
+                /* const PropTypes = {
+                    string(props, propName, componentName) {
+                        if (typeof props[propName] !== 'string') {
+                            return new Error(
+                                `Hey, the component ${componentName} needs the propr ${propName} to be a string, but you passed a ${typeof props[
+                                    propName
+                                ]}`,
+                            )
+                        }
+                    },
+                } */
+                SayHello.propTypes = {
+                    firstName: PropTypes.string.isRequired,
+                    lastName: PropTypes.string.isRequired,
+                }
+
+                const elemSH = (
+                    <SayHello firstName={'Ernst'} lastName={'Gtrr'} />
+                )
+
                 const fragment = React.createElement(
                     React.Fragment,
                     null,
                     reactElement,
                     secondElem,
                     FCElem,
+                    elemSH,
                 )
 
                 ReactDOM.render(fragment, rootElement)
