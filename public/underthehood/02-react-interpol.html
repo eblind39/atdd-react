@@ -15,6 +15,8 @@
         <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
 
         <script type="text/babel">
+            const rootElement = document.querySelector('#root')
+
             // the text "Hello World" has 11 characters
             // the text "" has No characters
             const CharacterCount = ({text}) => {
@@ -34,8 +36,27 @@
                 </React.Fragment>
             )
 
-            const rootElement = document.querySelector('#root')
-            ReactDOM.render(element, rootElement)
+            const tick = () => {
+                const time = new Date().toLocaleTimeString()
+                return (
+                    <div>
+                        <input value={time} />
+                        <input value={time} />
+                    </div>
+                )
+            }
+
+            tick()
+            setInterval(() => {
+                const elemTime = tick()
+                const fragment = React.createElement(
+                    React.Fragment,
+                    null,
+                    element,
+                    elemTime,
+                )
+                ReactDOM.render(fragment, rootElement)
+            }, 1000)
         </script>
     </body>
 </html>
