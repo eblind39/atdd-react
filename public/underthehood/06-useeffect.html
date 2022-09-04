@@ -16,14 +16,20 @@
         <script type="text/babel">
             const rootElement = document.querySelector('#root')
 
-            const Greeting = () => {
-                const [name, setName] = React.useState(
-                    () => window.localStorage.getItem('name') || '',
+            const useLocalStorage = (key, defaultValue = '') => {
+                const [state, setState] = React.useState(
+                    () => window.localStorage.getItem(key) || defaultValue,
                 )
 
                 React.useEffect(() => {
-                    window.localStorage.setItem('name', name)
-                }, [name])
+                    window.localStorage.setItem(key, state)
+                }, [key, state])
+
+                return [state, setState]
+            }
+
+            const Greeting = () => {
+                const [name, setName] = useLocalStorage('name')
 
                 const handleChange = event => setName(event.target.value)
 
