@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>React Styles</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+        <script type="text/babel">
+            const rootElement = document.querySelector('#root')
+
+            const Greeting = () => {
+                const [name, setName] = React.useState('')
+
+                const handleChange = event => setName(event.target.value)
+
+                return (
+                    <div>
+                        <form>
+                            <label htmlFor="name">Name: </label>
+                            <input id="name" onChange={handleChange} />
+                        </form>
+                        <p>
+                            {name ? (
+                                <strong>Hello {name}</strong>
+                            ) : (
+                                `Please type your name`
+                            )}
+                        </p>
+                    </div>
+                )
+            }
+
+            const fragment = React.createElement(
+                React.Fragment,
+                null,
+                <Greeting />,
+            )
+            ReactDOM.render(fragment, rootElement)
+        </script>
+    </body>
+</html>
