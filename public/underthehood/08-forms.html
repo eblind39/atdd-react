@@ -17,19 +17,36 @@
             const rootElement = document.querySelector('#root')
 
             const UsernameForm = () => {
+                const [username, setUsername] = React.useState('')
+                const isLoweCase = username === username.toLowerCase()
+                const error = isLoweCase ? null : 'Username must be lower case'
+
                 const handleSubmit = event => {
                     event.preventDefault()
                     const [usernameInput] = event.target.elements
                     console.log(`You entered: ${usernameInput.value}`)
+
+                    console.log(`You entered: ${username}`)
+                }
+
+                const handleChange = event => {
+                    setUsername(event.target.value)
                 }
 
                 return (
                     <form onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="usernameInput">Username:</label>
-                            <input id="usernameInput" type="text" />
+                            <input
+                                id="usernameInput"
+                                type="text"
+                                onChange={handleChange}
+                            />
                         </div>
-                        <button type="submit">Submit</button>
+                        <div style={{color: 'red'}}>{error}</div>
+                        <button disabled={!!error} type="submit">
+                            Submit
+                        </button>
                     </form>
                 )
             }
