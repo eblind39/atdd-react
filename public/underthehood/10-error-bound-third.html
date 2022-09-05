@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>React Forms</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://unpkg.com/react-error-boundary@1.2.5/dist/umd/react-error-boundary.js"></script>
+        <script type="text/babel">
+            const rootElement = document.querySelector('#root')
+
+            const ErrorBoundary = ReactErrorBoundary.ErrorBoundary
+
+            const ErrorFallback = ({error}) => {
+                return (
+                    <div>
+                        <p>Something went wrong:</p>
+                        <pre>{error.message}</pre>
+                    </div>
+                )
+            }
+
+            const Bomb = () => {
+                throw new Error(`⚡ CABOOM ⚡`)
+            }
+
+            const App = () => {
+                const [explode, setExplode] = React.useState(false)
+                return (
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                        <div>
+                            <div>
+                                <button onClick={() => setExplode(true)}>
+                                    🚀
+                                </button>
+                            </div>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <div>
+                                    {explode ? (
+                                        <Bomb />
+                                    ) : (
+                                        'Push the button Max!'
+                                    )}
+                                </div>
+                            </ErrorBoundary>
+                        </div>
+                    </ErrorBoundary>
+                )
+            }
+
+            const fragment = React.createElement(React.Fragment, null, <App />)
+
+            ReactDOM.render(fragment, rootElement)
+        </script>
+    </body>
+</html>
