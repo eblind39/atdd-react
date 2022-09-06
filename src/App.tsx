@@ -12,6 +12,7 @@ import GithubSearchPage from './containers/GithubSearchPage'
 import LoginPage from './containers/LoginPage'
 import AdminPage from './containers/AdminPage'
 import EmployeePage from './containers/EmployeePage'
+import HooksPage from './containers/HooksPage'
 import NotFoundPage from './utils/NotFoundPage'
 import PrivateRoutes from './components/privroutes'
 
@@ -32,6 +33,7 @@ const App = () => {
             <Route path="/creative" element={<CreativAnims />} />
             <Route path="/sketch" element={<CreativeCSketch />} />
             <Route path="/gitsearch" element={<GithubSearchPage />} />
+            <Route path="/hooks" element={<HooksPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     )

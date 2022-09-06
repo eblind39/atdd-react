@@ -17,6 +17,7 @@ import ManageSearchIcon from '@mui/icons-material/ManageSearch'
 import LoginIcon from '@mui/icons-material/Login'
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import BadgeIcon from '@mui/icons-material/Badge'
+import PhishingIcon from '@mui/icons-material/Phishing'
 import {Link} from 'react-router-dom'
 import {EnumStrings} from '../types/strings'
 import AuthContext from '../services/auth-context'
@@ -123,6 +124,14 @@ const NavBar: React.FC = (): JSX.Element => {
                     </ListItemIcon>
                     <Link to="/sketch">
                         <Typography variant="inherit">Sketch</Typography>
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <PhishingIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Link to="/hooks">
+                        <Typography variant="inherit">Hooks</Typography>
                     </Link>
                 </MenuItem>
             </MenuList>
