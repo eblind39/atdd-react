@@ -14,10 +14,24 @@ import Snackbar from '@mui/material/Snackbar'
 const Hooks = () => {
     const [searchText, setSearchText] = React.useState<string>('')
 
+    const handleSearchText = (event: React.SyntheticEvent) => {
+        const target = event.target as HTMLInputElement
+        const {value} = target
+        setSearchText(value)
+    }
+
+    const handleCleanText = (event: React.SyntheticEvent) => {
+        setSearchText('')
+    }
+
+    const handleDoSearch = (event: React.SyntheticEvent) => {
+        console.log('do the search')
+    }
+
     return (
         <React.Fragment>
             <CssBaseline />
-            <Container maxWidth="lg">
+            <Container maxWidth="xl" disableGutters>
                 <Typography variant="h3" component="h1">
                     Search IMDB
                 </Typography>
@@ -27,17 +41,27 @@ const Hooks = () => {
                             label="Filter by"
                             id="filter"
                             name="filter"
-                            // inputRef={searchText}
+                            value={searchText}
+                            onChange={handleSearchText}
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12} md={4}>
                         <Button
+                            color="warning"
+                            variant="contained"
+                            // disabled={isSearching}
+                            fullWidth
+                            onClick={handleCleanText}
+                        >
+                            Clear
+                        </Button>
+                        <Button
                             color="primary"
                             variant="contained"
                             // disabled={isSearching}
                             fullWidth
-                            // onClick={handleSearch}
+                            onClick={handleDoSearch}
                         >
                             Search
                         </Button>
