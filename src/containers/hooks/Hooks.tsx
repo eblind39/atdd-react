@@ -1,15 +1,11 @@
 import * as React from 'react'
-import {experimentalStyled as styled} from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import TablePagination from '@mui/material/TablePagination'
-import Snackbar from '@mui/material/Snackbar'
+import useRemoteService from '../../hooks/useRemoteService'
 
 const Hooks = () => {
     const [searchText, setSearchText] = React.useState<string>('')
@@ -25,7 +21,10 @@ const Hooks = () => {
     }
 
     const handleDoSearch = (event: React.SyntheticEvent) => {
-        console.log('do the search')
+        const {data, loading, error} = useRemoteService({
+            initialUrl: `http://hn.algolia.com/api/v1/search?query=foo&tags=story`,
+            initialData: {},
+        })
     }
 
     return (
