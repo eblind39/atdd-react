@@ -9,8 +9,8 @@
     <body>
         <div id="root"></div>
 
-        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
 
@@ -41,15 +41,15 @@
                 const JSXElem2 = <span>New</span>
                 const JSXElem3 = <strong>Text</strong>
                 const JSXElem = (
-                    <p class={myClassName}>
+                    <p className={myClassName}>
                         {childTxt} {JSXElem2} {JSXElem3}
                     </p>
                 )
 
                 const JSXElemWithChilds = (
                     <p
-                        class={myClassName}
-                        children={<div>With children</div>}
+                        className={myClassName}
+                        children={<span>With children</span>}
                     />
                 )
 
@@ -130,7 +130,8 @@
                     elemSH,
                 )
 
-                ReactDOM.render(fragment, rootElement)
+                const root = ReactDOM.createRoot(rootElement)
+                root.render(fragment)
             }
         </script>
     </body>

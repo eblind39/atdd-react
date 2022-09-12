@@ -9,8 +9,8 @@
     <body>
         <div id="root"></div>
 
-        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <script src="https://unpkg.com/react-error-boundary@1.2.5/dist/umd/react-error-boundary.js"></script>
         <script type="text/babel">
@@ -57,7 +57,8 @@
 
             const fragment = React.createElement(React.Fragment, null, <App />)
 
-            ReactDOM.render(fragment, rootElement)
+            const root = ReactDOM.createRoot(rootElement)
+            root.render(fragment)
         </script>
     </body>
 </html>

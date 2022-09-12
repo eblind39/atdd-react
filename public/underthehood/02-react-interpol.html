@@ -9,8 +9,8 @@
     <body>
         <div id="root"></div>
 
-        <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
 
@@ -42,15 +42,19 @@
                     <div>
                         <input
                             style={{backgroundColor: 'lightblue'}}
+                            onChange={() => null}
                             value={time}
                         />
                         <input
                             style={{backgroundColor: 'lightyellow'}}
+                            onChange={() => null}
                             value={time}
                         />
                     </div>
                 )
             }
+
+            const root = ReactDOM.createRoot(rootElement)
 
             tick()
             setInterval(() => {
@@ -61,7 +65,8 @@
                     element,
                     elemTime,
                 )
-                ReactDOM.render(fragment, rootElement)
+
+                root.render(fragment)
             }, 1000)
         </script>
     </body>
