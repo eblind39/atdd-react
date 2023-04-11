@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -8,7 +8,9 @@ import Typography from '@mui/material/Typography'
 import useRemoteService from '../../hooks/useRemoteService'
 
 const Hooks = () => {
-    const [searchText, setSearchText] = React.useState<string>('')
+    const [searchText, setSearchText] = useState<string>('')
+    const [doSearch, setDoSearch] = useState<boolean>(false);
+    const btnSearch = useRef<HTMLButtonElement | undefined>();
 
     const handleSearchText = (event: React.SyntheticEvent) => {
         const target = event.target as HTMLInputElement
@@ -20,12 +22,13 @@ const Hooks = () => {
         setSearchText('')
     }
 
-    const handleDoSearch = (event: React.SyntheticEvent) => {
-        const {data, loading, error} = useRemoteService({
-            initialUrl: `http://hn.algolia.com/api/v1/search?query=foo&tags=story`,
-            initialData: {},
-        })
-    }
+    useEffect(() => {
+        if (btnSearch.current) {
+            btnSearch.current.focus()
+        }
+
+        setDoSearch(false)
+    }, [doSearch])
 
     return (
         <React.Fragment>
@@ -56,11 +59,12 @@ const Hooks = () => {
                             Clear
                         </Button>
                         <Button
+                            ref={input => btnSearch}
                             color="primary"
                             variant="contained"
                             // disabled={isSearching}
                             fullWidth
-                            onClick={handleDoSearch}
+                            onClick={() => setDoSearch(true)}
                         >
                             Search
                         </Button>
